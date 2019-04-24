@@ -15,7 +15,7 @@ public class TestNTreeIsEmpty {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 0);
 
 		boolean isEmpty = tree.isEmpty();
-		assertEquals(true, isEmpty, "count of elements");
+		assertEquals(true, isEmpty, "empty tree");
 	}
 
 }
