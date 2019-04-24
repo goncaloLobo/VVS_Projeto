@@ -9,18 +9,21 @@ import org.junit.jupiter.api.Test;
 
 import sut.ArrayNTree;
 
-public class TestNTreeHeightMethod {
+public class TestNTreeHeight {
+
+	/**
+	 * Caso de teste para o método height para uma árvore vazia
+	 */
 	@Test
 	public void testEmptyTree() {
-		List<Integer> list = Arrays.asList();
-		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 0);
+		ArrayNTree<Integer> tree = new ArrayNTree<>(0);
 
 		int height = tree.height();
 		assertEquals(0, height, "height of tree");
 	}
-	
+
 	@Test
-	public void testMoreElements() {
+	public void testTreeWithMoreElements() {
 		List<Integer> list = Arrays.asList(39, 17);
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 2);
 

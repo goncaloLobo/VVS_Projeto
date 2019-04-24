@@ -9,13 +9,26 @@ import org.junit.jupiter.api.Test;
 import sut.ArrayNTree;
 
 public class TestNTreeSize {
-	@Test
-	public void testSize() {
-		List<Integer> list = Arrays.asList(39, 59, 17, 85, 41, 45);
-		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 6);
 
+	/**
+	 * Caso de teste para o método size com um elemento
+	 */
+	@Test
+	public void testSizeWithOneElement() {
+		ArrayNTree<Integer> tree = new ArrayNTree<>(1, 1);
 		int size = tree.size();
-		assertEquals(6, size, "count of elements");
+		assertEquals(1, size, "count of elements");
 	}
 
+	/**
+	 * Caso de teste para o método size com dois elemento
+	 */
+	@Test
+	public void testSizeWithTwoElements() {
+		List<Integer> list = Arrays.asList(39, 59);
+		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 2);
+
+		int size = tree.size();
+		assertEquals(2, size, "count of elements");
+	}
 }

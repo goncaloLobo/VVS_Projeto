@@ -9,20 +9,26 @@ import org.junit.jupiter.api.Test;
 
 import sut.ArrayNTree;
 
-public class TestNTreeMaxMethod {
+public class TestNTreeMax {
+
+	/**
+	 * Caso de teste para o método max para uma árvore apenas com uma folha
+	 */
 	@Test
 	public void testTreeWithOneElement() {
-		List<Integer> list = Arrays.asList(17);
-		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 1);
-		int min = tree.min();
-		assertEquals(17, min, "min");
+		ArrayNTree<Integer> tree = new ArrayNTree<>(17, 1);
+		int max = tree.max();
+		assertEquals(17, max, "max value");
 	}
-	
+
+	/**
+	 * Caso de teste para o método max para uma árvore com vários elementos
+	 */
 	@Test
 	public void testTreeMoreElements() {
 		List<Integer> list = Arrays.asList(39, 59, 17, 85, 41, 45);
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 6);
-		int min = tree.min();
-		assertEquals(17, min, "min");
+		int max = tree.max();
+		assertEquals(85, max, "max value");
 	}
 }
