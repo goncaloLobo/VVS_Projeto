@@ -11,7 +11,7 @@ public class Start {
 		List<Integer> list = Arrays.asList(39, 59, 17, 85, 41, 45);  
 
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 4);
-		System.out.println(tree.info());  
+		System.out.println(tree.info());
 		// output eg: [17:[39][41:[45]][59][85]], size: 6, height: 3, nLeaves: 4
 		
 		tree.delete(45);
