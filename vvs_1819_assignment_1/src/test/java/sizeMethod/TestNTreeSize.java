@@ -10,7 +10,7 @@ import sut.ArrayNTree;
 
 public class TestNTreeSize {
 	@Test
-	public void testSizeWithOneElement() {
+	public void testSize() {
 		List<Integer> list = Arrays.asList(39, 59, 17, 85, 41, 45);
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 6);
 
