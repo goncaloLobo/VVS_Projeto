@@ -26,9 +26,11 @@ public class Start {
 		System.out.println(tree.info());
 		// output eg: [1:[39][41][59][85]], size: 5, height: 2, nLeaves: 4
 		
-		//exemplo árvore vazia
-		ArrayNTree<Integer> tree1 = new ArrayNTree<>(1,1);
+		/*
+		List<Integer> list2 = Arrays.asList(1,3);
+		ArrayNTree<Integer> tree1 = new ArrayNTree<>(list2,3);
 		System.out.println("ola " + tree1.info());
-		System.out.println("contains: " + tree1.contains(1));
+		System.out.println("contains: " + tree1.contains(3));
+		*/
 	}
 }

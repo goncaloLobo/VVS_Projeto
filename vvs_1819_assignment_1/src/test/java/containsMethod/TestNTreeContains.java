@@ -34,16 +34,13 @@ public class TestNTreeContains {
 		boolean contains = tree.contains(0);
 		assertEquals(false, contains, "contains element");
 	}
-
-	/**
-	 * Caso de teste para o método contain cujo valor exista
-	 */
+	
 	@Test
-	public void testContains() {
-		List<Integer> list = Arrays.asList(10, 39, 50);
-		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
+	public void testDoesNotContainLarger() {
+		List<Integer> list = Arrays.asList(1,2,3);
+		ArrayNTree<Integer> tree = new ArrayNTree<>(list,3);
 		
-		boolean contains = tree.contains(50);
-		assertEquals(true, contains, "contains element");
+		boolean contains = tree.contains(4);
+		assertEquals(false, contains, "contains element");
 	}
 }
