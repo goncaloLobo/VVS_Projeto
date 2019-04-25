@@ -30,8 +30,6 @@ public class Start {
 		List<Integer> list1 = Arrays.asList(10,20,21,30);
 		ArrayNTree<Integer> tree1 = new ArrayNTree<>(list1, 4);
 
-		tree1.insert(5);
-		int size = tree1.size();
-		System.out.println("size: " + size);
+		System.out.println("info: " + tree.info());
 	}
 }
