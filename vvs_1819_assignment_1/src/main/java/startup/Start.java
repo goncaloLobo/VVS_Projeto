@@ -26,11 +26,12 @@ public class Start {
 		System.out.println(tree.info());
 		// output eg: [1:[39][41][59][85]], size: 5, height: 2, nLeaves: 4
 		
-		/*
-		List<Integer> list2 = Arrays.asList(1,3);
-		ArrayNTree<Integer> tree1 = new ArrayNTree<>(list2,3);
-		System.out.println("ola " + tree1.info());
-		System.out.println("contains: " + tree1.contains(3));
-		*/
+		System.out.println("//////////////////");
+		List<Integer> list1 = Arrays.asList(10,20,21,30);
+		ArrayNTree<Integer> tree1 = new ArrayNTree<>(list1, 4);
+
+		tree1.insert(5);
+		int size = tree1.size();
+		System.out.println("size: " + size);
 	}
 }
