@@ -27,9 +27,11 @@ public class Start {
 		// output eg: [1:[39][41][59][85]], size: 5, height: 2, nLeaves: 4
 		
 		System.out.println("//////////////////");
-		List<Integer> list1 = Arrays.asList(10,20,21,30);
-		ArrayNTree<Integer> tree1 = new ArrayNTree<>(list1, 4);
+		//List<Integer> list1 = Arrays.asList(10,20,21,30);
+		ArrayNTree<Integer> tree1 = new ArrayNTree<>(0);
+		System.out.println("info: " + tree1.info());
+		tree1.delete(1);
 
-		System.out.println("info: " + tree.info());
+		System.out.println("info: " + tree1.info());
 	}
 }
