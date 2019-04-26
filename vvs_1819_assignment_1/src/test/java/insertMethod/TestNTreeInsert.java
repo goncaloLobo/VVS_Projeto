@@ -35,18 +35,23 @@ public class TestNTreeInsert {
 		int size = tree.size();
 		assertEquals(1, size, "insert");
 	}
+	
+	@Test
+	public void testInsertSmallest() {
+		List<Integer> list = Arrays.asList(2, 5, 10);
+		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 5);
 
-	/*
-	 * Se tiver a inserir valores do genero 10, 20, 21, 30, 31 vou sempre bater no
-	 * isLeaf()
-	 * Teste com um valor mais pequeno que a root para a substituir
-	 */
+		tree.insert(1);
+		int size = tree.size();
+		assertEquals(4, size, "insert");
+	}
+
 	@Test
 	public void testInsertSmaller() {
-		List<Integer> list = Arrays.asList(10, 20, 21);
-		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
+		List<Integer> list = Arrays.asList(1, 5, 10);
+		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 5);
 
-		tree.insert(5);
+		tree.insert(22);
 		int size = tree.size();
 		assertEquals(4, size, "insert");
 	}
