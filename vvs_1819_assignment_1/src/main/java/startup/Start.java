@@ -7,7 +7,7 @@ import sut.ArrayNTree;
 public class Start {
 
 	public static void main(String[] args) {
-		
+		/*
 		List<Integer> list = Arrays.asList(39, 59, 17, 85, 41, 45);  
 
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 4);
@@ -25,13 +25,13 @@ public class Start {
 		tree.insert(1);
 		System.out.println(tree.info());
 		// output eg: [1:[39][41][59][85]], size: 5, height: 2, nLeaves: 4
-		
+		*/
 		System.out.println("//////////////////");
-		//List<Integer> list1 = Arrays.asList(10,20,21,30);
-		ArrayNTree<Integer> tree1 = new ArrayNTree<>(0);
-		System.out.println("info: " + tree1.info());
-		tree1.delete(1);
-
-		System.out.println("info: " + tree1.info());
+		List<Integer> list1 = Arrays.asList(15,1,5,20,10,4);
+		ArrayNTree<Integer> tree1 = new ArrayNTree<>(list1, 4);
+		System.out.println("before insert: " + tree1.info());
+		//tree1.insert(4);
+		tree1.insert(2);
+		System.out.println("after insert: " + tree1.info());
 	}
 }
