@@ -12,7 +12,7 @@ public class TestNTreeContains {
 
 	@Test
 	public void testEmptyTree() {
-		ArrayNTree<Integer> tree = new ArrayNTree<>(0);
+		ArrayNTree<Integer> tree = new ArrayNTree<>(3);
 
 		boolean contains = tree.contains(1);
 		assertEquals(false, contains, "contains element");
@@ -28,19 +28,28 @@ public class TestNTreeContains {
 
 	@Test
 	public void testTreeDoesNotContainSmaller() {
-		List<Integer> list = Arrays.asList(1, 2, 3);
+		List<Integer> list = Arrays.asList(39, 59, 17, 85, 41, 45);
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
 
-		boolean contains = tree.contains(0);
+		boolean contains = tree.contains(5);
 		assertEquals(false, contains, "contains element");
 	}
 	
 	@Test
 	public void testDoesNotContainLarger() {
+		List<Integer> list = Arrays.asList(39, 59, 17, 85, 41, 45);
+		ArrayNTree<Integer> tree = new ArrayNTree<>(list,3);
+		
+		boolean contains = tree.contains(90);
+		assertEquals(false, contains, "contains element");
+	}
+	
+	@Test
+	public void testFindLastChildren() {
 		List<Integer> list = Arrays.asList(1,2,3);
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list,3);
 		
-		boolean contains = tree.contains(4);
-		assertEquals(false, contains, "contains element");
+		boolean contains = tree.contains(3);
+		assertEquals(true, contains, "contains element");
 	}
 }

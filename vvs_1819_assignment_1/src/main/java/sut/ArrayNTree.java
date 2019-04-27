@@ -185,7 +185,8 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 			children[0].data = elem;
 			this.insert(previousValue);
 		}
-
+		
+		// branches: true && true, true && false, false && false, false && true
 		else if (nChildren < capacity && children[position] == null) {
 			// there's space available, and elem > all children
 			if (elem.compareTo(children[position - 1].max()) > 0)
@@ -197,11 +198,13 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 		}
 
 		else if (nChildren < capacity && elem.compareTo(children[position].max()) > 0) {
+			System.out.println("entrei entrei");
 			// element can be placed after an existing node N (there's space and it's larger
 			// than all children of N) but we must shift all those on the right
 			insertAt(elem, position + 1);
 		}
 
+		// branches: true || true, true || false, false || false, false || true
 		else if (nChildren == capacity || elem.compareTo(children[position].max()) < 0) {
 			// if the node's capacity is full, and elem is larger than all children
 			// place it below the last child

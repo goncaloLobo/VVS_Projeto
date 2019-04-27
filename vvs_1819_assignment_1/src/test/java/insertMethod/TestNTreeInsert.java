@@ -23,10 +23,6 @@ public class TestNTreeInsert {
 		assertEquals(1, size, "insert");
 	}
 
-	/**
-	 * Caso de teste para o metodo insert de um valor existente verificando o
-	 * tamanho da tree
-	 */
 	@Test
 	public void testContains() {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(1, 1);
@@ -35,56 +31,46 @@ public class TestNTreeInsert {
 		int size = tree.size();
 		assertEquals(1, size, "insert");
 	}
-	
+
+	// Substituir o valor da root
 	@Test
 	public void testInsertSmallest() {
-		List<Integer> list = Arrays.asList(2, 5, 10);
-		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 5);
+		ArrayNTree<Integer> tree = new ArrayNTree<>(3);
 
 		tree.insert(1);
 		int size = tree.size();
-		assertEquals(4, size, "insert");
+		assertEquals(2, size, "insert");
 	}
 
+	@Test
+	public void testInsertChildrenBigger() {
+		ArrayNTree<Integer> tree = new ArrayNTree<>(3);
+		tree.insert(5);
+		tree.insert(10);
+		tree.insert(20);
+
+		int size = tree.size();
+		assertEquals(3, size, "insert");
+	}
+
+	// insere valor mais pequeno que todos os filhos
 	@Test
 	public void testInsertSmaller() {
-		List<Integer> list = Arrays.asList(1, 5, 10);
-		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 5);
+		List<Integer> list = Arrays.asList(1, 5, 10, 15);
+		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
 
-		tree.insert(22);
-		int size = tree.size();
-		assertEquals(4, size, "insert");
-	}
-	
-	// teste que vai inserir um filho maior que os existentes
-	@Test
-	public void testInsertChildrenBigger(){
-		List<Integer> list = Arrays.asList(5,10,20);
-		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
-		
-		tree.insert(25);
-		int size = tree.size();
-		assertEquals(4, size, "insert");
-	}
-	
-	// teste que vai inserir um filho entre os existentes
-	@Test
-	public void testInsertChildrenBetween(){
-		List<Integer> list = Arrays.asList(1,5,10,20);
-		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
-		System.out.println("info antes do insert: " + tree.info());
 		tree.insert(4);
-		System.out.println("info dps do insert: " + tree.info());
 		int size = tree.size();
-		assertEquals(5, size, "insert");
+		assertEquals(5, size, "insert between");
 	}
 	
 	@Test
-	public void testElementIsLargerThanAllChildrenAndFullCapacity() {
+	public void testElementIsLargerChildrenAndFullCapacity() {
 		List<Integer> list = Arrays.asList(1,5,10,15);
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
 		
 		tree.insert(20);
+		System.out.println("dps: " + tree.info());
 		int size = tree.size();
 		assertEquals(5, size, "insert full capacity");
 	}
