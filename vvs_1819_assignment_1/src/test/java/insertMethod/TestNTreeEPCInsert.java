@@ -36,12 +36,12 @@ public class TestNTreeEPCInsert {
 	// (1,3)
 	@Test
 	public void testContains() {
-		List<Integer> list = Arrays.asList(39, 59, 17, 85, 41, 45);
+		List<Integer> list = Arrays.asList(39, 59, 17);
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
 
-		tree.insert(39);
+		tree.insert(17);
 		int size = tree.size();
-		assertEquals(6, size, "insert");
+		assertEquals(3, size, "insert");
 	}
 
 	// (1,4)
@@ -81,14 +81,31 @@ public class TestNTreeEPCInsert {
 
 	@Test
 	public void testSeven() {
-		List<Integer> list = Arrays.asList(1, 5, 10);
+		List<Integer> list = Arrays.asList(1, 5, 10, 15);
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
 
-		System.out.println("insert antes: " + tree.info());
-		tree.insert(9);
-		System.out.println("insert dpsss: " + tree.info());
+		tree.insert(14);
 		int size = tree.size();
 		assertEquals(5, size, "insert test seven");
 	}
 
+	@Test
+	public void testEight() {
+		List<Integer> list = Arrays.asList(1, 5, 10, 15, 12, 13);
+		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
+
+		tree.insert(11);
+		int size = tree.size();
+		assertEquals(7, size, "insert test seven");
+	}
+	
+	@Test
+	public void testNine() {
+		List<Integer> list = Arrays.asList(1, 5, 10, 15, 12, 13);
+		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
+
+		tree.insert(11);
+		int size = tree.size();
+		assertEquals(7, size, "insert test seven");
+	}
 }
