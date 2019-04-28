@@ -32,8 +32,8 @@ public class TestNTreeEPCInsert {
 		int size = tree.size();
 		assertEquals(2, size, "insert in leaf");
 	}
-	
-	//caminho: 1,5
+
+	// caminho: 1,5
 	@Test
 	public void testTreeIsLeafBigger() {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(1, 1);
@@ -53,13 +53,12 @@ public class TestNTreeEPCInsert {
 		int size = tree.size();
 		assertEquals(3, size, "insert");
 	}
-	
+
 	// caminho: 1,4,6,7,1,6,11
 	@Test
 	public void testNewRoot() {
-		List<Integer> list = Arrays.asList(5,10,15);
+		List<Integer> list = Arrays.asList(5, 10, 15);
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
-
 		tree.insert(1);
 		int size = tree.size();
 		assertEquals(4, size, "insert root");
@@ -88,21 +87,29 @@ public class TestNTreeEPCInsert {
 		assertEquals(4, size, "insert");
 	}
 
-	//caminho: 1,6,12,13,1,6,7,1,6,8,9
+	// caminho: 1,4,6,7,1,6,12,14,1,5
 	@Test
 	public void testSeven() {
 		List<Integer> list = Arrays.asList(2, 5, 10, 15);
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
 
-		System.out.println("antes: " + tree.info());
 		tree.insert(1);
-		System.out.println("dpsss: " + tree.info());
-		//tree.insert(19);
 		int size = tree.size();
 		assertEquals(5, size, "insert test seven");
 	}
-	
-	//caminho: 1,6,12,14,1,5
+
+	// caminho: 1,6,12,13,1,6,7,1,6,8,9
+	@Test
+	public void testEight() {
+		List<Integer> list = Arrays.asList(1, 5, 10, 15);
+		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
+
+		tree.insert(14);
+		int size = tree.size();
+		assertEquals(5, size, "insert test seven");
+	}
+
+	// caminho: 1,6,12,14,1,5
 	@Test
 	public void testMenorQMax() {
 		List<Integer> list = Arrays.asList(1, 5, 10, 15, 20);
@@ -111,15 +118,5 @@ public class TestNTreeEPCInsert {
 		tree.insert(19);
 		int size = tree.size();
 		assertEquals(5, size, "insert test seven");
-	}
-
-	@Test
-	public void testEight() {
-		List<Integer> list = Arrays.asList(1, 5, 10, 15);
-		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
-
-		tree.insert(11);
-		int size = tree.size();
-		assertEquals(7, size, "insert test eight");
 	}
 }

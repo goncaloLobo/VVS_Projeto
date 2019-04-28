@@ -145,9 +145,13 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 
 		int position = proposePosition(elem);
 
-		if (position == nChildren) // elem>all children: need to look at last child
+		if (position == nChildren) { // elem>all children: need to look at last child
 			position = nChildren - 1;
-
+		}
+		//boolean e = children[position].data.compareTo(elem) == 0;
+		//boolean f = children[position].contains(elem);
+		System.out.println("inteligente: " + children[position].data.compareTo(elem) + " " + children[position].contains(elem));
+		
 		return children[position].data.compareTo(elem) == 0 || children[position].contains(elem);
 	}
 
@@ -155,6 +159,7 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 
 	public void insert(T elem) {
 
+		System.out.println("arvore: " + this.info());
 		if (isEmpty()) {
 			data = elem;
 			empty = false;
@@ -169,6 +174,7 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 			T tmp = data;
 			data = elem;
 			elem = tmp; // swap values
+			System.out.println("arvore dentro da root: " + this.info());
 		}
 
 		if (isLeaf()) {
