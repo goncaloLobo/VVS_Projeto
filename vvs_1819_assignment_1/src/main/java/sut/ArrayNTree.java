@@ -205,12 +205,7 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 		}
 
 		// branches: true || true, true || false, false || false, false || true
-		else if (nChildren == capacity || elem.compareTo(children[position].max()) < 0) {
-			//boolean b = nChildren==capacity;
-			//boolean i = elem.compareTo(children[position].max()) < 0;
-			//System.out.println("nChildren == capacity: " + b);
-			//System.out.println("elem < 0: " + i);
-			
+		else if (nChildren == capacity || elem.compareTo(children[position].max()) < 0) {		
 			// if the node's capacity is full, and elem is larger than all children
 			// place it below the last child
 			if (position == capacity)
