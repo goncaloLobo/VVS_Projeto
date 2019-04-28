@@ -71,10 +71,10 @@ public class TestNTreeDelete {
 
 	@Test
 	public void testBorla() {
-		List<Integer> list = Arrays.asList(1, 2, 3, 4);
+		List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8);
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 4);
 
-		tree.delete(2);
+		tree.delete(6);
 		int size = tree.size();
 		assertEquals(3, size, "insert");
 	}

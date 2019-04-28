@@ -62,7 +62,7 @@ public class TestNTreeEPCInsert {
 
 		tree.insert(1);
 		int size = tree.size();
-		assertEquals(2, size, "insert root");
+		assertEquals(4, size, "insert root");
 	}
 
 	// caminho: 1,6,7,1,6,11
