@@ -148,9 +148,6 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 		if (position == nChildren) { // elem>all children: need to look at last child
 			position = nChildren - 1;
 		}
-		//boolean e = children[position].data.compareTo(elem) == 0;
-		//boolean f = children[position].contains(elem);
-		System.out.println("inteligente: " + children[position].data.compareTo(elem) + " " + children[position].contains(elem));
 		
 		return children[position].data.compareTo(elem) == 0 || children[position].contains(elem);
 	}
@@ -159,7 +156,6 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 
 	public void insert(T elem) {
 
-		System.out.println("arvore: " + this.info());
 		if (isEmpty()) {
 			data = elem;
 			empty = false;
@@ -174,7 +170,6 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 			T tmp = data;
 			data = elem;
 			elem = tmp; // swap values
-			System.out.println("arvore dentro da root: " + this.info());
 		}
 
 		if (isLeaf()) {
@@ -204,7 +199,6 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 		}
 
 		else if (nChildren < capacity && elem.compareTo(children[position].max()) > 0) {
-			System.out.println("entrei entrei");
 			// element can be placed after an existing node N (there's space and it's larger
 			// than all children of N) but we must shift all those on the right
 			insertAt(elem, position + 1);
