@@ -165,7 +165,7 @@ public class LineAndBranchCoverage {
 
 		tree.delete(6);
 		int size = tree.size();
-		assertEquals(3, size, "insert");
+		assertEquals(7, size, "insert");
 	}
 
 	/**
