@@ -1,6 +1,7 @@
 package insertMethod;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,8 +32,9 @@ public class TestNTreeEPCInsert {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(3, 1);
 
 		tree.insert(1);
-		int size = tree.size();
-		assertEquals(2, size, "insert in leaf");
+		String info = tree.toString();
+		boolean displays = info.equals("[1:[3]]");
+		assertTrue(displays);
 	}
 
 	// caminho: 1,3,5,7,8 cobre: (5,7,8) (3,5,7)
@@ -41,8 +43,9 @@ public class TestNTreeEPCInsert {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(1, 1);
 
 		tree.insert(2);
-		int size = tree.size();
-		assertEquals(2, size, "insert in leaf");
+		String info = tree.toString();
+		boolean displays = info.equals("[1:[2]]");
+		assertTrue(displays);
 	}
 
 	// caninho: 1,3,4 cobre: (3,4) (1,3,4)
@@ -63,8 +66,9 @@ public class TestNTreeEPCInsert {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
 
 		tree.insert(1);
-		int size = tree.size();
-		assertEquals(4, size, "insert root");
+		String info = tree.toString();
+		boolean displays = info.equals("[1:[5][10][15]]");
+		assertTrue(displays);
 	}
 
 	// caminho: 1,3,5,7,9,11,12,13 cobre: (9,11) (11,12) (12,13) (9,11,12)
@@ -75,8 +79,9 @@ public class TestNTreeEPCInsert {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
 
 		tree.insert(20);
-		int size = tree.size();
-		assertEquals(4, size, "insert");
+		String info = tree.toString();
+		boolean displays = info.equals("[5:[10][15][20]]");
+		assertTrue(displays);
 	}
 
 	// caminho: 1,3,5,6,7,9,10 cobre: (5,6,7) (6,7,9)
@@ -86,8 +91,9 @@ public class TestNTreeEPCInsert {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
 
 		tree.insert(1);
-		int size = tree.size();
-		assertEquals(5, size, "insert test seven");
+		String info = tree.toString();
+		boolean displays = info.equals("[1:[2:[5]][10][15]]");
+		assertTrue(displays);
 	}
 
 	// caminho: 1,3,5,7,9,11,12,14 cobre: (12,14) (11,12,14) (7,9,11)
@@ -95,32 +101,23 @@ public class TestNTreeEPCInsert {
 	public void testSpecialCase() {
 		List<Integer> list = Arrays.asList(17, 39, 41, 59, 70, 43, 61);
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 4);
-		System.out.println("antes: " + tree.info());
 
 		tree.delete(70);
 		tree.insert(60);
-		int size = tree.size();
-		assertEquals(7, size, "insert test eight");
+		String info = tree.toString();
+		boolean displays = info.equals("[17:[39][41:[43]][59:[60][61]]]");
+		assertTrue(displays);
 	}
 
 	// caminho: 1,3,5,7,9,11,15,17,18,20 cobre: (18,20) (17,18,20)
 	@Test
 	public void testMenorQMax() {
-		List<Integer> list = Arrays.asList(17, 39, 41, 59, 70);
+		List<Integer> list = Arrays.asList(1, 5, 10, 15, 20);
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
 
-		tree.insert(43);
-		int size = tree.size();
-		assertEquals(6, size, "insert");
-	}
-	
-	@Test
-	public void testEight() {
-		List<Integer> list = Arrays.asList(1,5,10,15,11,12);
-		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
-
-		tree.insert(14);
-		int size = tree.size();
-		assertEquals(7, size, "insert test eight");
+		tree.insert(19);
+		String info = tree.toString();
+		boolean displays = info.equals("[1:[5][10][15:[19][20]]]");
+		assertTrue(displays);
 	}
 }

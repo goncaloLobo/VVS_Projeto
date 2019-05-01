@@ -1,5 +1,7 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -13,6 +15,7 @@ import sut.ArrayNTree;
 
 public class LineAndBranchCoverage {
 
+	/// CLONE
 	/**
 	 * Caso de teste para o método clone usado o método equals
 	 */
@@ -26,6 +29,7 @@ public class LineAndBranchCoverage {
 		assertEquals(true, equals, "clone");
 	}
 
+	/// CONTAINS
 	/*
 	 * Na linha 155 do método contains é impossível cobrir um dos branches,
 	 * nomeadamente o caso em que o compareTo == 0 || contains(elem) == false, uma
@@ -75,6 +79,7 @@ public class LineAndBranchCoverage {
 		assertEquals(false, contains, "contains element");
 	}
 
+	/// COUNT LEAVES
 	/**
 	 * Caso de teste para o método count leaves com uma árvore apenas com raiz
 	 */
@@ -98,6 +103,8 @@ public class LineAndBranchCoverage {
 		int leaves = tree.countLeaves();
 		assertEquals(1, leaves, "number of leaves");
 	}
+
+	/// DELETE
 
 	@Test
 	public void testDeleteEmptyTree() {
@@ -159,7 +166,7 @@ public class LineAndBranchCoverage {
 	}
 
 	@Test
-	public void testBorla() {
+	public void testDeleteCompact() {
 		List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8);
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 4);
 
@@ -167,6 +174,8 @@ public class LineAndBranchCoverage {
 		int size = tree.size();
 		assertEquals(7, size, "insert");
 	}
+
+	/// EQUALS
 
 	/**
 	 * Caso de teste para o método equals a comparar a árvore consigo própria
@@ -184,7 +193,7 @@ public class LineAndBranchCoverage {
 	 * Caso de teste para o método equals a comparar duas árvores iguais
 	 */
 	@Test
-	public void testEqualsTrees() {
+	public void testEqualTrees() {
 		List<Integer> list1 = Arrays.asList(10, 20, 21);
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list1, 3);
 		ArrayNTree<Integer> tree2 = new ArrayNTree<>(list1, 3);
@@ -249,6 +258,8 @@ public class LineAndBranchCoverage {
 		assertEquals(false, equals, "equals");
 	}
 
+	/// HEIGHT
+
 	/**
 	 * Caso de teste para o método height para uma árvore vazia
 	 */
@@ -269,6 +280,7 @@ public class LineAndBranchCoverage {
 		assertEquals(2, height, "height of tree");
 	}
 
+	/// INFO
 	@Test
 	public void testEmptyTreeInfo() {
 		List<Integer> list1 = Arrays.asList(39, 59, 17, 85, 41, 45);
@@ -284,10 +296,10 @@ public class LineAndBranchCoverage {
 		assertEquals(true, equals, "equals");
 	}
 
+	/// INSERT
 	/*
 	 * Caso de teste para o metodo insert verificando o tamanho da tree
 	 */
-	// (1,2)
 	@Test
 	public void testInsertEmptyTree() {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(0);
@@ -297,14 +309,14 @@ public class LineAndBranchCoverage {
 		assertEquals(1, size, "insert");
 	}
 
-	// caminho: 1,4,5
 	@Test
 	public void testTreeIsLeafSmaller() {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(3, 1);
 
 		tree.insert(1);
-		int size = tree.size();
-		assertEquals(2, size, "insert in leaf");
+		String info = tree.toString();
+		boolean displays = info.equals("[1:[3]]");
+		assertTrue(displays);
 	}
 
 	@Test
@@ -312,8 +324,9 @@ public class LineAndBranchCoverage {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(1, 1);
 
 		tree.insert(2);
-		int size = tree.size();
-		assertEquals(2, size, "insert in leaf");
+		String info = tree.toString();
+		boolean displays = info.equals("[1:[2]]");
+		assertTrue(displays);
 	}
 
 	@Test
@@ -332,8 +345,9 @@ public class LineAndBranchCoverage {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
 
 		tree.insert(1);
-		int size = tree.size();
-		assertEquals(4, size, "insert root");
+		String info = tree.toString();
+		boolean displays = info.equals("[1:[5][10][15]]");
+		assertTrue(displays);
 	}
 
 	@Test
@@ -342,8 +356,9 @@ public class LineAndBranchCoverage {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
 
 		tree.insert(8);
-		int size = tree.size();
-		assertEquals(4, size, "insert");
+		String info = tree.toString();
+		boolean displays = info.equals("[5:[8][10][15]]");
+		assertTrue(displays);
 	}
 
 	@Test
@@ -352,8 +367,9 @@ public class LineAndBranchCoverage {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
 
 		tree.insert(20);
-		int size = tree.size();
-		assertEquals(4, size, "insert");
+		String info = tree.toString();
+		boolean displays = info.equals("[5:[10][15][20]]");
+		assertTrue(displays);
 	}
 
 	@Test
@@ -362,8 +378,9 @@ public class LineAndBranchCoverage {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
 
 		tree.insert(19);
-		int size = tree.size();
-		assertEquals(6, size, "insert test seven");
+		String info = tree.toString();
+		boolean displays = info.equals("[1:[5][10][15:[19][20]]]");
+		assertTrue(displays);
 	}
 
 	@Test
@@ -372,22 +389,24 @@ public class LineAndBranchCoverage {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
 
 		tree.insert(11);
-		int size = tree.size();
-		assertEquals(5, size, "insert test eight");
+		String info = tree.toString();
+		boolean displays = info.equals("[1:[5][10:[11]][15]]");
+		assertTrue(displays);
 	}
 
 	@Test
 	public void testSpecialCase() {
 		List<Integer> list = Arrays.asList(17, 39, 41, 59, 70, 43, 61);
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 4);
-		System.out.println("antes: " + tree.info());
 
 		tree.delete(70);
 		tree.insert(60);
-		int size = tree.size();
-		assertEquals(7, size, "insert test eight");
+		String info = tree.toString();
+		boolean displays = info.equals("[17:[39][41:[43]][59:[60][61]]]");
+		assertTrue(displays);
 	}
 
+	/// EMPTY
 	/**
 	 * Caso de teste para o método isEmpty para uma árvore vazia
 	 */
@@ -396,17 +415,25 @@ public class LineAndBranchCoverage {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(0);
 
 		boolean isEmpty = tree.isEmpty();
-		assertEquals(true, isEmpty, "empty tree");
+		assertTrue(isEmpty);
 	}
 
-	// se a árvore é vazia então não tem nós, fará sentido testar?
+	@Test
+	public void testTreeWithElements() {
+		ArrayNTree<Integer> tree = new ArrayNTree<>(1, 1);
+
+		boolean isEmpty = tree.isEmpty();
+		assertFalse(isEmpty);
+	}
+
+	// ISLEAF
 	@Test
 	public void testEmptyTree() {
 		List<Integer> list = Arrays.asList();
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 0);
 
 		boolean isLeaf = tree.isLeaf();
-		assertEquals(false, isLeaf, "is leaf");
+		assertFalse(isLeaf);
 	}
 
 	/**
@@ -417,7 +444,7 @@ public class LineAndBranchCoverage {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(1, 1);
 
 		boolean isLeaf = tree.isLeaf();
-		assertEquals(true, isLeaf, "is leaf");
+		assertTrue(isLeaf);
 	}
 
 	/**
@@ -429,8 +456,10 @@ public class LineAndBranchCoverage {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 2);
 
 		boolean isLeaf = tree.isLeaf();
-		assertEquals(false, isLeaf, "is leaf");
+		assertFalse(isLeaf);
 	}
+
+	/// MAX
 
 	/**
 	 * Caso de teste para o método max para uma árvore apenas com uma folha
@@ -453,6 +482,8 @@ public class LineAndBranchCoverage {
 		assertEquals(85, max, "max value");
 	}
 
+	/// MIN
+
 	/**
 	 * Caso de teste para o método min para uma árvore apenas com raiz
 	 */
@@ -474,6 +505,8 @@ public class LineAndBranchCoverage {
 		assertEquals(17, min, "min value");
 	}
 
+	/// NEXT
+
 	@Test
 	public void testEmptyStack() {
 		LinkedList<ArrayNTree<Integer>> stack = new LinkedList<ArrayNTree<Integer>>();
@@ -490,6 +523,7 @@ public class LineAndBranchCoverage {
 		});
 	}
 
+	/// SIZE
 	/**
 	 * Caso de teste para o método size com um elemento
 	 */
@@ -513,6 +547,15 @@ public class LineAndBranchCoverage {
 	}
 
 	@Test
+	public void testSizeEmptyTree() {
+		ArrayNTree<Integer> tree = new ArrayNTree<>(0);
+
+		int size = tree.size();
+		assertEquals(1, size, "count of elements");
+	}
+
+	/// TOLIST
+	@Test
 	public void testCompare() {
 		List<Integer> list1 = Arrays.asList(10, 20, 21);
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list1, 3);
@@ -523,6 +566,8 @@ public class LineAndBranchCoverage {
 		List<Integer> ordered = tree.toList();
 		assertEquals(list, ordered, "equal List");
 	}
+
+	/// TOSTRING
 
 	/**
 	 * Caso de teste para o método toString para uma representação de uma empty tree
