@@ -11,6 +11,7 @@ import sut.ArrayNTree;
 
 public class AllCouplingsUsePaths {
 	
+	// caminho: (1,2)
 	@Test
 	public void testDeleteEmptyTree() {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(0);
@@ -19,7 +20,7 @@ public class AllCouplingsUsePaths {
 		int size = tree.size();
 		assertEquals(1, size, "delete empty");
 	}
-	
+	 // caminho: (1,2)
 	@Test
 	public void testDeleteSmallerThanRoot() {
 		List<Integer> list = Arrays.asList(2, 3, 4);
@@ -30,6 +31,7 @@ public class AllCouplingsUsePaths {
 		assertEquals(3, size, "delete root");
 	}
 	
+	// caminho: (1,3,5,6)
 	@Test
 	public void testDeleteRoot() {
 		List<Integer> list = Arrays.asList(1, 2);
@@ -40,7 +42,7 @@ public class AllCouplingsUsePaths {
 		assertEquals(1, size, "delete root");
 	}
 
-	// caminho: 1,5,6
+	// caminho: 1,3,5,7,8,12
 	@Test
 	public void testDeleteSmaller() {
 		List<Integer> list = Arrays.asList(1, 5, 10, 15);
@@ -51,7 +53,7 @@ public class AllCouplingsUsePaths {
 		assertEquals(4, size, "delete");
 	}
 
-	// caminho: 1,5,7,8,1,3
+	// caminho: 1,3,5,7,9,10,11,12
 	@Test
 	public void testDeleteBigger() {
 		List<Integer> list = Arrays.asList(1, 5, 10, 15);
@@ -62,8 +64,8 @@ public class AllCouplingsUsePaths {
 		assertEquals(4, size, "delete");
 	}
 
-	// caminho: 1,2,6,7,2,4,3
-	// caminho (no compact): [1,2,9,1,2,3,4,5,3,6,7,8]
+	// caminho: 1,3,5,7,9,11,12
+	// caminho (no compact): [1,2,8,1,2,3,4,5,3,6,7]
 	@Test
 	public void testDeleteMiddleElem() {
 		List<Integer> list = Arrays.asList(1, 5, 10, 15);
@@ -74,6 +76,7 @@ public class AllCouplingsUsePaths {
 		assertEquals(3, size, "delete");
 	}
 
+	// caminho: 1,3,5,7,9,11,12
 	// caminho: 1,2,4,9 (dentro do proposePosition)
 	@Test
 	public void testDeleteCap() {
@@ -85,6 +88,7 @@ public class AllCouplingsUsePaths {
 		assertEquals(2, size, "delete");
 	}
 
+	// caminho: 1,3,5,7,9,11,12
 	// caminho: 1,2,6,7,2,5,3 (dentro do proposePosition)
 	@Test
 	public void testDeleteFive() {
@@ -96,6 +100,7 @@ public class AllCouplingsUsePaths {
 		assertEquals(4, size, "delete");
 	}
 	
+	// caminho: 1,3,5,7,9,11,12
 	// caminho: 1,2,6,7,2,6,7,2,5,3
 	@Test
 	public void testDeleteIndexTwice() {

@@ -26,7 +26,7 @@ public class LineAndBranchCoverage {
 
 		ArrayNTree<Integer> tree2 = tree.clone();
 		boolean equals = tree.equals(tree2);
-		assertEquals(true, equals, "clone");
+		assertTrue(equals);
 	}
 
 	/// CONTAINS
@@ -41,7 +41,7 @@ public class LineAndBranchCoverage {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(3);
 
 		boolean contains = tree.contains(1);
-		assertEquals(false, contains, "contains element");
+		assertFalse(contains);
 	}
 
 	@Test
@@ -49,7 +49,7 @@ public class LineAndBranchCoverage {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(1, 1);
 
 		boolean contains = tree.contains(1);
-		assertEquals(true, contains, "contains element");
+		assertTrue(contains);
 	}
 
 	@Test
@@ -58,7 +58,7 @@ public class LineAndBranchCoverage {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
 
 		boolean contains = tree.contains(5);
-		assertEquals(false, contains, "contains element");
+		assertFalse(contains);
 	}
 
 	@Test
@@ -67,7 +67,7 @@ public class LineAndBranchCoverage {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
 
 		boolean contains = tree.contains(85);
-		assertEquals(true, contains, "contains element");
+		assertTrue(contains);
 	}
 
 	@Test
@@ -76,7 +76,7 @@ public class LineAndBranchCoverage {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
 
 		boolean contains = tree.contains(90);
-		assertEquals(false, contains, "contains element");
+		assertFalse(contains);
 	}
 
 	/// COUNT LEAVES
@@ -176,7 +176,6 @@ public class LineAndBranchCoverage {
 	}
 
 	/// EQUALS
-
 	/**
 	 * Caso de teste para o método equals a comparar a árvore consigo própria
 	 */
@@ -186,7 +185,7 @@ public class LineAndBranchCoverage {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list1, 3);
 
 		boolean equals = tree.equals(tree);
-		assertEquals(true, equals, "equals");
+		assertTrue(equals);
 	}
 
 	/**
@@ -199,7 +198,7 @@ public class LineAndBranchCoverage {
 		ArrayNTree<Integer> tree2 = new ArrayNTree<>(list1, 3);
 
 		boolean equals = tree.equals(tree2);
-		assertEquals(true, equals, "equals");
+		assertTrue(equals);
 	}
 
 	/**
@@ -214,7 +213,7 @@ public class LineAndBranchCoverage {
 		ArrayNTree<Integer> tree2 = new ArrayNTree<>(list2, 2);
 
 		boolean equals = tree.equals(tree2);
-		assertEquals(false, equals, "not equal trees");
+		assertFalse(equals);
 	}
 
 	/**
@@ -229,7 +228,7 @@ public class LineAndBranchCoverage {
 		ArrayNTree<Integer> tree2 = new ArrayNTree<>(list2, 3);
 
 		boolean equals = tree.equals(tree2);
-		assertEquals(false, equals, "not equal trees");
+		assertFalse(equals);
 	}
 
 	/**
@@ -243,7 +242,7 @@ public class LineAndBranchCoverage {
 		ArrayNTree<Integer> tree2 = new ArrayNTree<>(list2, 3);
 
 		boolean equals = tree.equals(tree2);
-		assertEquals(false, equals, "not equal trees");
+		assertFalse(equals);
 	}
 
 	/**
@@ -255,7 +254,7 @@ public class LineAndBranchCoverage {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list1, 3);
 
 		boolean equals = tree.equals(0);
-		assertEquals(false, equals, "equals");
+		assertFalse(equals);
 	}
 
 	/// HEIGHT
@@ -293,7 +292,7 @@ public class LineAndBranchCoverage {
 		String info = tree + ", size: " + size + ", height: " + height + ", nLeaves: " + countLeaves;
 
 		boolean equals = info.equals(infoTree);
-		assertEquals(true, equals, "equals");
+		assertTrue(equals);
 	}
 
 	/// INSERT
@@ -302,7 +301,7 @@ public class LineAndBranchCoverage {
 	 */
 	@Test
 	public void testInsertEmptyTree() {
-		ArrayNTree<Integer> tree = new ArrayNTree<>(0);
+		ArrayNTree<Integer> tree = new ArrayNTree<>(1);
 
 		tree.insert(1);
 		int size = tree.size();
@@ -578,7 +577,7 @@ public class LineAndBranchCoverage {
 
 		String display = tree.toString();
 		boolean equals = display.equals("[]");
-		assertEquals(true, equals, "toString");
+		assertTrue(equals);
 	}
 
 	@Test
@@ -587,7 +586,7 @@ public class LineAndBranchCoverage {
 
 		String display = tree.toString();
 		boolean equals = display.equals("[1]");
-		assertEquals(true, equals, "toString");
+		assertTrue(equals);
 	}
 
 	@Test
@@ -597,7 +596,7 @@ public class LineAndBranchCoverage {
 
 		String display = tree.toString();
 		boolean equals = display.equals("[17:[37:[39]][41][45][59][85]]");
-		assertEquals(true, equals, "toString");
+		assertTrue(equals);
 	}
 
 }

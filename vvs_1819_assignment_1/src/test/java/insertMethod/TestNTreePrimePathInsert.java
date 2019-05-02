@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import sut.ArrayNTree;
 
-public class TestNTreePPInsert {
+public class TestNTreePrimePathInsert {
 
 	// caminho: 1,2 cobre: (1,2)
 	@Test

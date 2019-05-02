@@ -120,4 +120,17 @@ public class TestNTreeEPCInsert {
 		boolean displays = info.equals("[1:[5][10][15:[19][20]]]");
 		assertTrue(displays);
 	}
+
+	// caminho: 1,3,5,7,9,11,15,17,18,19 cobre: (18,19) (17,18,19)
+	@Test
+	public void testBottom() {
+		List<Integer> list = Arrays.asList(17, 39, 41, 59, 70);
+		ArrayNTree<Integer> tree = new ArrayNTree<>(list, 3);
+
+		tree.insert(43);
+		System.out.println(tree.toString());
+		String info = tree.toString();
+		boolean displays = info.equals("[17:[39][41:[43]][59:[70]]]");
+		assertTrue(displays);
+	}
 }
