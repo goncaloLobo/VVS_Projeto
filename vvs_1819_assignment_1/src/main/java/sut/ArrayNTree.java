@@ -203,7 +203,7 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 			insertAt(elem, position + 1);
 		}
 
-		else if (nChildren == capacity || elem.compareTo(children[position].max()) < 0) {		
+		else if (nChildren == capacity || elem.compareTo(children[position].max()) < 0) {
 			// if the node's capacity is full, and elem is larger than all children
 			// place it below the last child
 			if (position == capacity)

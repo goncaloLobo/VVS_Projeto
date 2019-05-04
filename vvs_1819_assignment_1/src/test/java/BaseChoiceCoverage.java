@@ -1,12 +1,7 @@
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import sut.ArrayNTree;
 
@@ -42,6 +37,7 @@ public class BaseChoiceCoverage {
 	 */
 	@Test
 	public void testCaso3() {
+		// NULL POINTER EXCEPTION
 		ArrayNTree<Integer> emptyTree = new ArrayNTree<>(1);
 		ArrayNTree<Integer> tree = new ArrayNTree<>(3);
 		tree.insert(5);

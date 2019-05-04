@@ -1,16 +1,14 @@
-
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import sut.ArrayNTree;
 
 public class AllCouplingsUsePaths {
-	
+
 	// caminho: (1,2)
 	@Test
 	public void testDeleteEmptyTree() {
@@ -20,7 +18,8 @@ public class AllCouplingsUsePaths {
 		int size = tree.size();
 		assertEquals(1, size, "delete empty");
 	}
-	 // caminho: (1,2)
+
+	// caminho: (1,2)
 	@Test
 	public void testDeleteSmallerThanRoot() {
 		List<Integer> list = Arrays.asList(2, 3, 4);
@@ -30,7 +29,7 @@ public class AllCouplingsUsePaths {
 		int size = tree.size();
 		assertEquals(3, size, "delete root");
 	}
-	
+
 	// caminho: (1,3,5,6)
 	@Test
 	public void testDeleteRoot() {
@@ -99,7 +98,7 @@ public class AllCouplingsUsePaths {
 		int size = tree.size();
 		assertEquals(4, size, "delete");
 	}
-	
+
 	// caminho: 1,3,5,7,9,11,12
 	// caminho: 1,2,6,7,2,6,7,2,5,3
 	@Test
