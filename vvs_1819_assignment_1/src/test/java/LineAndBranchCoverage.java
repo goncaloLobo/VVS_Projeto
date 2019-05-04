@@ -176,7 +176,7 @@ public class LineAndBranchCoverage {
 	}
 
 	/// EQUALS
-	
+
 	/**
 	 * Caso de teste para o método equals a comparar duas árvores vazias
 	 */
@@ -184,8 +184,11 @@ public class LineAndBranchCoverage {
 	public void testeTwoEmptyTrees() {
 		ArrayNTree<Integer> tree = new ArrayNTree<>(1);
 		ArrayNTree<Integer> tree2 = new ArrayNTree<>(1);
-		assertThrows(NullPointerException.class, () -> {tree.equals(tree2);});
+		assertThrows(NullPointerException.class, () -> {
+			tree.equals(tree2);
+		});
 	}
+
 	/**
 	 * Caso de teste para o método equals a comparar a árvore consigo própria
 	 */

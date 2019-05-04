@@ -21,23 +21,23 @@
 		<!-- maven-compiler-plugin -->
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
-        
+
 		<java.version>1.8</java.version>
-        <junit.version>4.12</junit.version>
+		<junit.version>4.12</junit.version>
 		<junit.jupiter.version>5.0.2</junit.jupiter.version>
 		<junit.vintage.version>${junit.version}.2</junit.vintage.version>
 		<junit.platform.version>1.0.2</junit.platform.version>
 	</properties>
 
 	<dependencies>
-      
-        <!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-all -->
+
+		<!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-all -->
 		<dependency>
-		   <groupId>org.hamcrest</groupId>
-		   <artifactId>hamcrest-all</artifactId>
-		   <version>1.3</version>
-		   <scope>test</scope>
-		</dependency>  
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-all</artifactId>
+			<version>1.3</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
@@ -77,24 +77,24 @@
 			<artifactId>apiguardian-api</artifactId>
 			<version>1.0.0</version>
 			<scope>test</scope>
-        </dependency>
-        <dependency>
-  			<groupId>org.junit.jupiter</groupId>
-  			<artifactId>junit-jupiter-params</artifactId>
-  			<version>5.0.0-RC2</version>
 		</dependency>
-              <!-- https://mvnrepository.com/artifact/com.pholser/junit-quickcheck-core -->
-	      <dependency>
-	          <groupId>com.pholser</groupId>
-	          <artifactId>junit-quickcheck-core</artifactId>
-	          <version>0.7</version>
-	      </dependency>
-	      <!-- https://mvnrepository.com/artifact/com.pholser/junit-quickcheck-generators -->
-	      <dependency>
-	          <groupId>com.pholser</groupId>
-	          <artifactId>junit-quickcheck-generators</artifactId>
-	          <version>0.7</version>
-	      </dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
+			<version>5.0.0-RC2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.pholser/junit-quickcheck-core -->
+		<dependency>
+			<groupId>com.pholser</groupId>
+			<artifactId>junit-quickcheck-core</artifactId>
+			<version>0.7</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.pholser/junit-quickcheck-generators -->
+		<dependency>
+			<groupId>com.pholser</groupId>
+			<artifactId>junit-quickcheck-generators</artifactId>
+			<version>0.7</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -109,8 +109,14 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
-            
-            <plugin>
+
+			<plugin>
+				<groupId>org.pitest</groupId>
+				<artifactId>pitest-maven</artifactId>
+				<version>LATEST</version>
+			</plugin>
+
+			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.7.0</version>
 				<configuration>
@@ -131,11 +137,8 @@
 					<properties>
 						<!-- <includeTags>fast</includeTags> -->
 						<excludeTags>slow</excludeTags>
-						<!--
-						<configurationParameters>
-							junit.jupiter.conditions.deactivate = *
-						</configurationParameters>
-						-->
+						<!-- <configurationParameters> junit.jupiter.conditions.deactivate 
+							= * </configurationParameters> -->
 					</properties>
 				</configuration>
 				<dependencies>
@@ -145,6 +148,26 @@
 						<version>${junit.platform.version}</version>
 					</dependency>
 				</dependencies>
+			</plugin>
+
+			<plugin>
+				<groupId>org.pitest</groupId>
+				<artifactId>pitest-maven</artifactId>
+				<version>LATEST</version>
+				<configuration>
+					<excludedClasses>
+						<param>sut.ArrayNTree</param>  <!-- does not work (?) -->
+					</excludedClasses>
+					<mutators>
+						<!--<mutator>ALL</mutator> -->
+						<mutator>NULL_RETURNS</mutator>
+						<mutator>INLINE_CONSTS</mutator>
+						<mutator>CONSTRUCTOR_CALLS</mutator>
+						<mutator>NON_VOID_METHOD_CALLS</mutator>
+						<mutator>REMOVE_CONDITIONALS</mutator>
+						<mutator>EXPERIMENTAL_MEMBER_VARIABLE</mutator>
+					</mutators>
+				</configuration>
 			</plugin>
 
 		</plugins>
