@@ -78,9 +78,15 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 
 	public int size() {
 		int sum = 0;
-		for (NTree<T> brt : children)
-			if (brt != null)
-				sum += brt.size();
+		if (isEmpty()) {
+			return 0;
+		} else if (isLeaf()) {
+			return 1;
+		} else {
+			for (NTree<T> brt : children)
+				if (brt != null)
+					sum += brt.size();
+		}
 		return 1 + sum;
 	}
 
@@ -148,7 +154,7 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 		if (position == nChildren) { // elem>all children: need to look at last child
 			position = nChildren - 1;
 		}
-		
+
 		return children[position].data.compareTo(elem) == 0 || children[position].contains(elem);
 	}
 
@@ -186,7 +192,7 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 			children[0].data = elem;
 			this.insert(previousValue);
 		}
-		
+
 		else if (nChildren < capacity && children[position] == null) {
 			// there's space available, and elem > all children
 			if (elem.compareTo(children[position - 1].max()) > 0)
@@ -304,7 +310,7 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean equals(Object other) {
-		return this == other || other instanceof NTree && equalTrees(this, ((NTree<T>) other));
+		return other instanceof NTree && equalTrees(this, ((NTree<T>) other));
 	}
 
 	// compares the elements between to NTrees
@@ -324,7 +330,6 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 			if (!it1.hasNext() && !it2.hasNext())
 				return true;
 		}
-
 		return false;
 	}
 
