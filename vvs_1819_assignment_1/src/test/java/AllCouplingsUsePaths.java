@@ -16,7 +16,7 @@ public class AllCouplingsUsePaths {
 
 		tree.delete(1);
 		int size = tree.size();
-		assertEquals(1, size, "delete empty");
+		assertEquals(0, size, "delete empty");
 	}
 
 	// caminho: (1,2)
