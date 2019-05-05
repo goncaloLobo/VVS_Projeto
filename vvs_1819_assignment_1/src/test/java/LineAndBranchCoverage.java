@@ -751,14 +751,34 @@ public class LineAndBranchCoverage {
 	 */
 	@Test
 	public void testToListCompare() {
-		List<Integer> list1 = Arrays.asList(10, 20, 21);
+		List<Integer> list1 = Arrays.asList(90, 10, 20, 25, 50, 40, 30, 80, 90);
 		ArrayNTree<Integer> tree = new ArrayNTree<>(list1, 3);
 		List<Integer> list = new LinkedList<>();
-		for (Integer elem : tree)
+		System.out.println("árvore: " + tree.info());
+		System.out.println("elem da árvore: ");
+		
+		for (Integer elem : tree) {
 			list.add(elem);
+			System.out.print(elem + ";");
+		}
+		System.out.println();
 
 		List<Integer> ordered = tree.toList();
+		System.out.println("elem do toList: ");
+		for (Integer elem : ordered) {
+			System.out.print(elem + ";");
+		}
 		assertEquals(list, ordered, "equal List");
+	}
+	
+	@Test
+	public void testToListEmptyTree() {
+		ArrayNTree<Integer> tree = new ArrayNTree<>(3);
+		List<Integer> ordered = tree.toList();
+		
+		List<Integer> n = new LinkedList<>();
+		n.add(null);
+		assertEquals(n, ordered, "equal List");
 	}
 
 	/// TOSTRING
