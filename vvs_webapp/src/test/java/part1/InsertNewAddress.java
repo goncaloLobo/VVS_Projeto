@@ -1,21 +1,24 @@
 package part1;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.HttpMethod;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.util.NameValuePair;
 
 public class InsertNewAddress {
 
@@ -27,6 +30,9 @@ public class InsertNewAddress {
 
 	private static HtmlPage page;
 	private static final String APPLICATION_URL = "http://localhost:8080/VVS_webappdemo/";
+
+	private static final int nRows = 0;
+	private static final int nRowsAfter = 0;
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
@@ -88,5 +94,23 @@ public class InsertNewAddress {
 		assertTrue(textReportPage.contains(LOCALITY));
 
 		// verificar se inseriu a address e se o número de colunas aumentou
+		// Build a GET request
+		try (final WebClient webClient = new WebClient(BrowserVersion.getDefault())) {
+			java.net.URL url = new java.net.URL(APPLICATION_URL + "GetCustomerPageController");
+			WebRequest requestSettings = new WebRequest(url, HttpMethod.GET);
+
+			// Set the request parameters
+			requestSettings.setRequestParameters(new ArrayList<NameValuePair>());
+			requestSettings.getRequestParameters().add(new NameValuePair("vat", NPC));
+			requestSettings.getRequestParameters().add(new NameValuePair("submit", "Get+Customer"));
+
+			reportPage = webClient.getPage(requestSettings);
+		}
+
+		assertTrue(reportPage.asXml().contains(NPC));
+		assertTrue(reportPage.asXml().contains(ADDRESS));
+		assertTrue(reportPage.asXml().contains(DOOR));
+		assertTrue(reportPage.asXml().contains(POSTALCODE));
+		assertTrue(reportPage.asXml().contains(LOCALITY));
 	}
 }
