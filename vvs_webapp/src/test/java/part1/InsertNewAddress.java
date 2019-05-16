@@ -131,7 +131,6 @@ public class InsertNewAddress {
 			requestSettings.getRequestParameters().add(new NameValuePair("submit", "Get+Customer"));
 			
 			reportPageAux = webClient.getPage(requestSettings);
-			System.out.println("Text: " + reportPageAux.asText());
 			assertEquals(HttpMethod.GET, reportPageAux.getWebResponse().getWebRequest().getHttpMethod());		
 		}
 		
@@ -142,6 +141,5 @@ public class InsertNewAddress {
 		
 		List<DomElement> list = reportPageAux.getElementsById("rows");
 		nRowsAfter = list.size();
-		System.out.println("rowsAfter: " + nRowsAfter);
 	}
 }
