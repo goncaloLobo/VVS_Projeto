@@ -1,11 +1,13 @@
 package part1;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -14,6 +16,7 @@ import com.gargoylesoftware.htmlunit.HttpMethod;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebRequest;
+import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
@@ -31,8 +34,8 @@ public class InsertNewAddress {
 	private static HtmlPage page;
 	private static final String APPLICATION_URL = "http://localhost:8080/VVS_webappdemo/";
 
-	private static final int nRows = 0;
-	private static final int nRowsAfter = 0;
+	private int nRows = 0;
+	private int nRowsAfter = 0;
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
@@ -53,17 +56,40 @@ public class InsertNewAddress {
 		}
 	}
 
+	@Before
+	public void parametersGetNRows() throws IOException {
+		HtmlPage reportPage;
+
+		try (final WebClient webClient = new WebClient(BrowserVersion.getDefault())) {
+			java.net.URL url = new java.net.URL(APPLICATION_URL + "GetCustomerPageController");
+			WebRequest requestSettings = new WebRequest(url, HttpMethod.GET);
+			// Set the request parameters
+			requestSettings.setRequestParameters(new ArrayList<NameValuePair>());
+			requestSettings.getRequestParameters().add(new NameValuePair("vat", NPC));
+			requestSettings.getRequestParameters().add(new NameValuePair("submit", "Get+Customer"));
+			reportPage = webClient.getPage(requestSettings);
+			
+			assertEquals(HttpMethod.GET, reportPage.getWebResponse().getWebRequest().getHttpMethod());
+		} // try
+		
+		List<DomElement> list = reportPage.getElementsById("rows");
+		nRows = list.size();
+		System.out.println("rows: " + nRows);
+	}
+
 	@Test
 	public void insertNewAddressTest() throws IOException {
 		// get a specific link
-		HtmlAnchor insertNewAddress = page.getAnchorByHref("addAddressToCustomer.html");
+		HtmlAnchor insertNewAddressLink = page.getAnchorByHref("addAddressToCustomer.html");
+		
 		// click on it
-		HtmlPage nextPage = (HtmlPage) insertNewAddress.openLinkInNewWindow();
+		HtmlPage nextPage = (HtmlPage) insertNewAddressLink.openLinkInNewWindow();
+		
 		// check if title is the one expected
 		assertEquals("Enter Address", nextPage.getTitleText());
 
-		// get the first page form:
-		HtmlForm insertAddressForm = nextPage.getForms().get(0);
+		// get the page first form:
+		HtmlForm insertAddressForm = nextPage.getForms().get(0);		
 
 		// place data at form
 		HtmlInput vatInput = insertAddressForm.getInputByName("vat");
@@ -75,14 +101,14 @@ public class InsertNewAddress {
 		HtmlInput doorInput = insertAddressForm.getInputByName("door");
 		doorInput.setValueAttribute(DOOR);
 
-		HtmlInput postalCodeInput = insertAddressForm.getInputByName("postalcode");
+		HtmlInput postalCodeInput = insertAddressForm.getInputByName("postalCode");
 		postalCodeInput.setValueAttribute(POSTALCODE);
 
 		HtmlInput localityInput = insertAddressForm.getInputByName("locality");
 		localityInput.setValueAttribute(LOCALITY);
 
 		// submit form
-		HtmlInput submit = insertAddressForm.getInputByName("submit");
+		HtmlInput submit = insertAddressForm.getInputByValue("Get Customer");
 
 		// check if report page includes the proper values
 		HtmlPage reportPage = submit.click();
@@ -94,7 +120,7 @@ public class InsertNewAddress {
 		assertTrue(textReportPage.contains(LOCALITY));
 
 		// verificar se inseriu a address e se o número de colunas aumentou
-		// Build a GET request
+		HtmlPage reportPageAux;
 		try (final WebClient webClient = new WebClient(BrowserVersion.getDefault())) {
 			java.net.URL url = new java.net.URL(APPLICATION_URL + "GetCustomerPageController");
 			WebRequest requestSettings = new WebRequest(url, HttpMethod.GET);
@@ -103,14 +129,19 @@ public class InsertNewAddress {
 			requestSettings.setRequestParameters(new ArrayList<NameValuePair>());
 			requestSettings.getRequestParameters().add(new NameValuePair("vat", NPC));
 			requestSettings.getRequestParameters().add(new NameValuePair("submit", "Get+Customer"));
-
-			reportPage = webClient.getPage(requestSettings);
+			
+			reportPageAux = webClient.getPage(requestSettings);
+			System.out.println("Text: " + reportPageAux.asText());
+			assertEquals(HttpMethod.GET, reportPageAux.getWebResponse().getWebRequest().getHttpMethod());		
 		}
-
-		assertTrue(reportPage.asXml().contains(NPC));
-		assertTrue(reportPage.asXml().contains(ADDRESS));
-		assertTrue(reportPage.asXml().contains(DOOR));
-		assertTrue(reportPage.asXml().contains(POSTALCODE));
-		assertTrue(reportPage.asXml().contains(LOCALITY));
+		
+		assertTrue(reportPageAux.asXml().contains(ADDRESS));
+		assertTrue(reportPageAux.asXml().contains(DOOR));
+		assertTrue(reportPageAux.asXml().contains(POSTALCODE));
+		assertTrue(reportPageAux.asXml().contains(LOCALITY));
+		
+		List<DomElement> list = reportPageAux.getElementsById("rows");
+		nRowsAfter = list.size();
+		System.out.println("rowsAfter: " + nRowsAfter);
 	}
 }
