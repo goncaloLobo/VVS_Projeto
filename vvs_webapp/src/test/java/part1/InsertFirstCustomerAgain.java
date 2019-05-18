@@ -1,7 +1,6 @@
 package part1;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -48,6 +47,10 @@ public class InsertFirstCustomerAgain {
 		}
 	}
 
+	/**
+	 * Obtem o primeiro cliente
+	 * @throws MalformedURLException
+	 */
 	@Before
 	public void getFirstCustomer() throws MalformedURLException {
 		int i = 0; // para andar pelos elementos de um customer

@@ -97,7 +97,7 @@ public class CreateAndRemoveCustomer {
 		vatInput.setValueAttribute(npc);
 		submit = removeCustomerForm.getInputByName("submit");
 		submit.click();
-		
+
 		// now check that the new client was erased
 		HtmlAnchor getCustomersLink = page.getAnchorByHref("GetAllCustomersPageController");
 		nextPage = (HtmlPage) getCustomersLink.openLinkInNewWindow();
@@ -105,6 +105,11 @@ public class CreateAndRemoveCustomer {
 		listAllClients();
 	}
 
+	/**
+	 * Método que obtem todos os clientes da tabela de clientes
+	 * 
+	 * @throws MalformedURLException
+	 */
 	public void listAllClients() throws MalformedURLException {
 		int i = 0; // para andar pelos elementos de um customer
 		HtmlAnchor removeCustomerLink = page.getAnchorByHref("GetAllCustomersPageController");
@@ -118,13 +123,12 @@ public class CreateAndRemoveCustomer {
 			List<HtmlTableCell> customerInfo = row.getCells();
 			if (customerInfo.get(0).asText().contains("Name"))
 				continue; // skip header
-			else
-				if(customerInfo.get(0).asText().toString().equals(customers[i+1])) {
-					assertEquals(customers[i+1], customerInfo.get(0).asText());
-					assertEquals(customers[i], customerInfo.get(2).asText());
-					assertEquals(customers[i+2], customerInfo.get(1).asText());
-					i+=3;
-				}
+			else if (customerInfo.get(0).asText().toString().equals(customers[i + 1])) {
+				assertEquals(customers[i + 1], customerInfo.get(0).asText());
+				assertEquals(customers[i], customerInfo.get(2).asText());
+				assertEquals(customers[i + 2], customerInfo.get(1).asText());
+				i += 3;
+			}
 		}
 
 	}

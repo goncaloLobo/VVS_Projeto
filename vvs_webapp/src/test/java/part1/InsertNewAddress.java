@@ -16,11 +16,12 @@ import com.gargoylesoftware.htmlunit.HttpMethod;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebRequest;
-import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.HtmlTable;
+import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
 
 public class InsertNewAddress {
@@ -57,39 +58,42 @@ public class InsertNewAddress {
 	}
 
 	@Before
-	public void parametersGetNRows() throws IOException {
+	public void getNRows() throws IOException {
 		HtmlPage reportPage;
 
 		try (final WebClient webClient = new WebClient(BrowserVersion.getDefault())) {
 			java.net.URL url = new java.net.URL(APPLICATION_URL + "GetCustomerPageController");
 			WebRequest requestSettings = new WebRequest(url, HttpMethod.GET);
+
 			// Set the request parameters
 			requestSettings.setRequestParameters(new ArrayList<NameValuePair>());
+			System.out.println("NPC: " + NPC);
 			requestSettings.getRequestParameters().add(new NameValuePair("vat", NPC));
 			requestSettings.getRequestParameters().add(new NameValuePair("submit", "Get+Customer"));
 			reportPage = webClient.getPage(requestSettings);
-			
+
 			assertEquals(HttpMethod.GET, reportPage.getWebResponse().getWebRequest().getHttpMethod());
 		} // try
-		
-		List<DomElement> list = reportPage.getElementsById("rows");
+
+		final HtmlTable addressTable = (HtmlTable) reportPage.getByXPath("//table[@class='w3-table w3-bordered']")
+				.toArray()[0];
+		List<HtmlTableRow> list = addressTable.getRows();
 		nRows = list.size();
-		System.out.println("rows: " + nRows);
 	}
 
 	@Test
 	public void insertNewAddressTest() throws IOException {
 		// get a specific link
 		HtmlAnchor insertNewAddressLink = page.getAnchorByHref("addAddressToCustomer.html");
-		
+
 		// click on it
 		HtmlPage nextPage = (HtmlPage) insertNewAddressLink.openLinkInNewWindow();
-		
+
 		// check if title is the one expected
 		assertEquals("Enter Address", nextPage.getTitleText());
 
 		// get the page first form:
-		HtmlForm insertAddressForm = nextPage.getForms().get(0);		
+		HtmlForm insertAddressForm = nextPage.getForms().get(0);
 
 		// place data at form
 		HtmlInput vatInput = insertAddressForm.getInputByName("vat");
@@ -108,7 +112,7 @@ public class InsertNewAddress {
 		localityInput.setValueAttribute(LOCALITY);
 
 		// submit form
-		HtmlInput submit = insertAddressForm.getInputByValue("Get Customer");
+		HtmlInput submit = insertAddressForm.getInputByValue("Insert");
 
 		// check if report page includes the proper values
 		HtmlPage reportPage = submit.click();
@@ -129,17 +133,20 @@ public class InsertNewAddress {
 			requestSettings.setRequestParameters(new ArrayList<NameValuePair>());
 			requestSettings.getRequestParameters().add(new NameValuePair("vat", NPC));
 			requestSettings.getRequestParameters().add(new NameValuePair("submit", "Get+Customer"));
-			
+
 			reportPageAux = webClient.getPage(requestSettings);
-			assertEquals(HttpMethod.GET, reportPageAux.getWebResponse().getWebRequest().getHttpMethod());		
+			assertEquals(HttpMethod.GET, reportPageAux.getWebResponse().getWebRequest().getHttpMethod());
 		}
-		
+
 		assertTrue(reportPageAux.asXml().contains(ADDRESS));
 		assertTrue(reportPageAux.asXml().contains(DOOR));
 		assertTrue(reportPageAux.asXml().contains(POSTALCODE));
 		assertTrue(reportPageAux.asXml().contains(LOCALITY));
-		
-		List<DomElement> list = reportPageAux.getElementsById("rows");
+
+		final HtmlTable addressTable = (HtmlTable) reportPageAux.getByXPath("//table[@class='w3-table w3-bordered']")
+				.toArray()[0];
+		List<HtmlTableRow> list = addressTable.getRows();
 		nRowsAfter = list.size();
+		assertEquals("numero de linhas", nRows - 1, nRowsAfter - 2);
 	}
 }

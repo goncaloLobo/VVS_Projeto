@@ -1,12 +1,13 @@
 package part1;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -21,8 +22,6 @@ import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlTable;
-import com.gargoylesoftware.htmlunit.html.HtmlTableCell;
-import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
 
 public class CreateNewSale {
@@ -30,7 +29,10 @@ public class CreateNewSale {
 	private String npc = "218802374";
 	private String designation = "Gonçalo";
 	private String phoneNumber = "969149742";
-	private int idVenda;
+	private int idNovaSale;
+	private int idLastSale;
+	private int idNovaSaleDelivery;
+	private int idLastSaleDelivery;
 
 	private static HtmlPage page;
 	private static final String APPLICATION_URL = "http://localhost:8080/VVS_webappdemo/";
@@ -54,6 +56,44 @@ public class CreateNewSale {
 		}
 	}
 
+	/**
+	 * Obtém o id da última venda do cliente antes de uma nova venda
+	 * 
+	 * @throws FailingHttpStatusCodeException
+	 * @throws IOException
+	 */
+	@Before
+	public void getLastSaleId() throws FailingHttpStatusCodeException, IOException {
+		HtmlPage reportPage;
+		try (final WebClient webClient = new WebClient(BrowserVersion.getDefault())) {
+			java.net.URL url = new java.net.URL(APPLICATION_URL + "GetSalePageController");
+			WebRequest requestSettings = new WebRequest(url, HttpMethod.GET);
+
+			// Set the request parameters
+			requestSettings.setRequestParameters(new ArrayList<NameValuePair>());
+			requestSettings.getRequestParameters().add(new NameValuePair("customerVat", npc));
+
+			reportPage = webClient.getPage(requestSettings);
+			assertEquals(HttpMethod.GET, reportPage.getWebResponse().getWebRequest().getHttpMethod());
+		}
+
+		// verificar que está lá o customer
+		assertTrue(reportPage.asXml().contains(npc));
+
+		// obter o id da última venda do cliente antes de uma nova venda
+		// para dps comparar esse id com o id de uma nova venda, e mostrar
+		// que uma nova venda foi feita
+		final HtmlTable salesTable = (HtmlTable) reportPage.getByXPath("//table[@class='w3-table w3-bordered']")
+				.toArray()[0];
+		idLastSale = Integer.parseInt(salesTable.getElementsByTagName("tr").get(salesTable.getRowCount() - 1)
+				.getElementsByTagName("td").get(0).asText());
+	}
+
+	/**
+	 * Método que adiciona uma nova sale do cliente
+	 * 
+	 * @throws IOException
+	 */
 	@Test
 	public void createNewSale() throws IOException {
 		// get a specific link
@@ -75,17 +115,19 @@ public class CreateNewSale {
 		// submit form
 		HtmlInput submit = insertNewSaleForm.getInputByValue("Add Sale");
 
-		// check if report page includes the proper values
 		HtmlPage reportPage = submit.click();
 		String textReportPage = reportPage.asText();
 		assertTrue(textReportPage.contains(npc));
 
-		listAllSales();
+		System.out.println("criei nova sale, vou verificar se a sale criada existe.");
+		// verifica se a sale criada existe
+		checkNewSaleId();
 	}
 
-	public void listAllSales() throws FailingHttpStatusCodeException, IOException {
-
+	public void checkNewSaleId() throws FailingHttpStatusCodeException, IOException {
 		HtmlPage reportPageAux;
+		String status = null;
+
 		try (final WebClient webClient = new WebClient(BrowserVersion.getDefault())) {
 			java.net.URL url = new java.net.URL(APPLICATION_URL + "GetSalePageController");
 			WebRequest requestSettings = new WebRequest(url, HttpMethod.GET);
@@ -97,54 +139,195 @@ public class CreateNewSale {
 			assertEquals(HttpMethod.GET, reportPageAux.getWebResponse().getWebRequest().getHttpMethod());
 		}
 
-		// checks if NPC is correct
+		// verificar que o npc está na tabela
 		assertTrue(reportPageAux.asXml().contains(npc));
 
 		final HtmlTable salesTable = (HtmlTable) reportPageAux.getByXPath("//table[@class='w3-table w3-bordered']")
 				.toArray()[0];
 
-		for (final HtmlTableRow row : salesTable.getRows()) {
-			// this table has six columns, we need the 2nd and 3rd
-			List<HtmlTableCell> saleInfo = row.getCells();
-			if (saleInfo.get(0).asText().contains("Name"))
-				continue; // skip header
-			else if (saleInfo.get(4).asText().equals(npc)) {
-				// 0 - id
-				// 1 - data
-				// 2 - total
-				// 3 - status
-				// 4 - customer vat number
-				idVenda = Integer.parseInt(saleInfo.get(0).asText());
-				
-			}
-		}
+		idNovaSale = Integer.parseInt(salesTable.getElementsByTagName("tr").get(salesTable.getRowCount() - 1)
+				.getElementsByTagName("td").get(0).asText());
+		status = salesTable.getElementsByTagName("tr").get(salesTable.getRowCount() - 1).getElementsByTagName("td")
+				.get(3).asText();
+
+		System.out.println("id da nova sale criada: " + idNovaSale);
+		System.out.println("estado da nova sale criada: " + status);
+		
+		// verifica que a sale está aberta
+		assertEquals("O", status);
+		// verifica que o id da nova venda não é o id
+		assertNotEquals(idLastSale, idNovaSale);
 	}
 
 	@Test
 	public void createNewSaleDelivery() throws IOException {
+		System.out.println("vou criar uma nova sale delivery então!");
+		// obter o id da ultima sale delivery, para dps verificar que a nova
+		// sale delivery é +1 da anterior
+		System.out.println("mas antes vou obter o id da ultima sale delivery.");
+		getLastSaleDeliveryId();
+
 		// get a specific link
-		HtmlAnchor insertNewSaleDelivery = page.getAnchorByHref("saleDeliveryVat.html");
+		HtmlAnchor insertNewDeliveryForm = page.getAnchorByHref("saleDeliveryVat.html");
 
 		// click on it
-		HtmlPage nextPage = (HtmlPage) insertNewSaleDelivery.openLinkInNewWindow();
+		HtmlPage nextPage = (HtmlPage) insertNewDeliveryForm.openLinkInNewWindow();
 
 		// check if title is the one expected
 		assertEquals("Enter Name", nextPage.getTitleText());
 
 		// get the page first form:
-		HtmlForm insertNewSaleDeliveryForm = nextPage.getForms().get(0);
+		HtmlForm insertNewSaleForm = nextPage.getForms().get(0);
 
 		// place data at form
-		HtmlInput vatInput = insertNewSaleDeliveryForm.getInputByName("vat");
+		HtmlInput vatInput = insertNewSaleForm.getInputByName("vat");
 		vatInput.setValueAttribute(npc);
 
 		// submit form
-		HtmlInput submit = insertNewSaleDeliveryForm.getInputByValue("Add Sale");
+		HtmlInput submit = insertNewSaleForm.getInputByValue("Get Customer");
 
-		// check if report page includes the proper values
 		HtmlPage reportPage = submit.click();
 		String textReportPage = reportPage.asText();
+		// verificar que contem lá o npc do cliente
 		assertTrue(textReportPage.contains(npc));
 
+		// verificar se inseriu a address e se o número de colunas aumentou
+		HtmlPage reportPageAux;
+		try (final WebClient webClient = new WebClient(BrowserVersion.getDefault())) {
+			java.net.URL url = new java.net.URL(APPLICATION_URL + "AddSaleDeliveryPageController");
+			WebRequest requestSettings = new WebRequest(url, HttpMethod.GET);
+
+			// Set the request parameters
+			requestSettings.setRequestParameters(new ArrayList<NameValuePair>());
+			requestSettings.getRequestParameters().add(new NameValuePair("vat", npc));
+
+			reportPageAux = webClient.getPage(requestSettings);
+			assertEquals(HttpMethod.GET, reportPageAux.getWebResponse().getWebRequest().getHttpMethod());
+		}
+
+		String addressId = "1";
+		String saleId = "1";
+
+		// get the page first form:
+		HtmlForm insertNewDeliveryForm2 = reportPageAux.getForms().get(0);
+
+		// place data at form
+		HtmlInput addressInput = insertNewDeliveryForm2.getInputByName("addr_id");
+		addressInput.setValueAttribute(addressId);
+		HtmlInput saleInput = insertNewDeliveryForm2.getInputByName("sale_id");
+		saleInput.setValueAttribute(saleId);
+
+		// submit form
+		HtmlInput submitNewDelivery = insertNewDeliveryForm2.getInputByValue("Insert");
+
+		HtmlPage reportPage2 = submitNewDelivery.click();
+		String textReportPage2 = reportPage.asText();
+		// verificar que contem lá o id da morada e o id da venda
+		assertTrue(textReportPage2.contains(addressId));
+		assertTrue(textReportPage2.contains(saleId));
+
+		System.out.println("criei uma nova sale delivery, vou verificar que existe.");
+		// verifica se a delivery criada existe
+		checkNewDeliveryId();
+	}
+
+	public void getLastSaleDeliveryId() throws FailingHttpStatusCodeException, IOException {
+		// get a specific link
+		HtmlAnchor showDeliveryForm = page.getAnchorByHref("showDelivery.html");
+
+		// click on it
+		HtmlPage nextPage = (HtmlPage) showDeliveryForm.openLinkInNewWindow();
+
+		// check if title is the one expected
+		assertEquals("Enter Name", nextPage.getTitleText());
+
+		// get the page first form:
+		HtmlForm insertNewSaleForm = nextPage.getForms().get(0);
+
+		// place data at form
+		HtmlInput vatInput = insertNewSaleForm.getInputByName("vat");
+		vatInput.setValueAttribute(npc);
+
+		// submit form
+		HtmlInput submit = insertNewSaleForm.getInputByValue("Get Customer");
+
+		HtmlPage reportPage = submit.click();
+		String textReportPage = reportPage.asText();
+		// verificar que contem lá o npc do cliente
+		assertTrue(textReportPage.contains(npc));
+
+		HtmlPage anoterReportPage;
+		try (final WebClient webClient = new WebClient(BrowserVersion.getDefault())) {
+			java.net.URL url = new java.net.URL(APPLICATION_URL + "GetSaleDeliveryPageController");
+			WebRequest requestSettings = new WebRequest(url, HttpMethod.GET);
+
+			// Set the request parameters
+			requestSettings.setRequestParameters(new ArrayList<NameValuePair>());
+			requestSettings.getRequestParameters().add(new NameValuePair("vat", npc));
+
+			anoterReportPage = webClient.getPage(requestSettings);
+			assertEquals(HttpMethod.GET, anoterReportPage.getWebResponse().getWebRequest().getHttpMethod());
+		}
+		
+		// obter o id da última venda do cliente antes de uma nova venda
+		// para dps comparar esse id com o id de uma nova venda, e mostrar
+		// que uma nova venda foi feita
+		final HtmlTable salesTable = (HtmlTable) anoterReportPage.getByXPath("//table[@class='w3-table w3-bordered']")
+				.toArray()[0];
+		idLastSaleDelivery = Integer.parseInt(salesTable.getElementsByTagName("tr").get(salesTable.getRowCount() - 1)
+				.getElementsByTagName("td").get(0).asText());
+		System.out.println("id da ultima sale delivery: " + idLastSaleDelivery);
+	}
+
+	/**
+	 * Método que obtem o id da nova sale delivery
+	 * 
+	 * @throws FailingHttpStatusCodeException
+	 * @throws IOException
+	 */
+	public void checkNewDeliveryId() throws FailingHttpStatusCodeException, IOException {
+		// get a specific link
+		HtmlAnchor showDeliveryForm = page.getAnchorByHref("showDelivery.html");
+
+		// click on it
+		HtmlPage nextPage = (HtmlPage) showDeliveryForm.openLinkInNewWindow();
+
+		// check if title is the one expected
+		assertEquals("Enter Name", nextPage.getTitleText());
+
+		// get the page first form:
+		HtmlForm insertNewSaleForm = nextPage.getForms().get(0);
+
+		// place data at form
+		HtmlInput vatInput = insertNewSaleForm.getInputByName("vat");
+		vatInput.setValueAttribute(npc);
+
+		// submit form
+		HtmlInput submit = insertNewSaleForm.getInputByValue("Get Customer");
+
+		HtmlPage reportPage = submit.click();
+		String textReportPage = reportPage.asText();
+		// verificar que contem lá o npc do cliente
+		assertTrue(textReportPage.contains(npc));
+
+		// verificar se inseriu a address e se o número de colunas aumentou
+		HtmlPage reportPageAux;
+		try (final WebClient webClient = new WebClient(BrowserVersion.getDefault())) {
+			java.net.URL url = new java.net.URL(APPLICATION_URL + "GetSaleDeliveryPageController");
+			WebRequest requestSettings = new WebRequest(url, HttpMethod.GET);
+
+			// Set the request parameters
+			requestSettings.setRequestParameters(new ArrayList<NameValuePair>());
+			requestSettings.getRequestParameters().add(new NameValuePair("vat", npc));
+
+			reportPageAux = webClient.getPage(requestSettings);
+			assertEquals(HttpMethod.GET, reportPageAux.getWebResponse().getWebRequest().getHttpMethod());
+		}
+
+		final HtmlTable saleDeliveryTable = (HtmlTable) reportPageAux
+				.getByXPath("//table[@class='w3-table w3-bordered']").toArray()[0];
+		idNovaSaleDelivery = Integer.parseInt(saleDeliveryTable.getElementsByTagName("tr")
+				.get(saleDeliveryTable.getRowCount() - 1).getElementsByTagName("td").get(0).asText());
+		System.out.println("id da nova sale delivery: " + idNovaSaleDelivery);
 	}
 }
