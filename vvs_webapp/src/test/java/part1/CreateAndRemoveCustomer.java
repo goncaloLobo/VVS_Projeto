@@ -25,7 +25,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
 public class CreateAndRemoveCustomer {
 
 	private static HtmlPage page;
-	private static final String APPLICATION_URL = "http://localhost:8080/VVS_webappdemo/";
+	private static final String APPLICATION_URL = "http://localhost:8080/VVS_11_webappdemo/";
 
 	private String customers[] = { "197672337", "JOSE FARIA", "914276732", "168027852", "LUIS SANTOS", "964294317",
 			"218802374", "Gonçalo", "969149742" };

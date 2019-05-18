@@ -27,16 +27,14 @@ import com.gargoylesoftware.htmlunit.util.NameValuePair;
 public class CreateNewSale {
 
 	private String npc = "218802374";
-	private String designation = "Gonçalo";
-	private String phoneNumber = "969149742";
 	private int idNovaSale;
 	private int idLastSale;
 	private int idNovaSaleDelivery;
 	private int idLastSaleDelivery;
 
 	private static HtmlPage page;
-	private static final String APPLICATION_URL = "http://localhost:8080/VVS_webappdemo/";
-
+	private static final String APPLICATION_URL = "http://localhost:8080/VVS_11_webappdemo/";
+	
 	@BeforeClass
 	public static void setUpClass() throws Exception {
 		try (final WebClient webClient = new WebClient(BrowserVersion.getDefault())) {
@@ -152,7 +150,7 @@ public class CreateNewSale {
 
 		System.out.println("id da nova sale criada: " + idNovaSale);
 		System.out.println("estado da nova sale criada: " + status);
-		
+
 		// verifica que a sale está aberta
 		assertEquals("O", status);
 		// verifica que o id da nova venda não é o id
@@ -221,7 +219,7 @@ public class CreateNewSale {
 		HtmlInput submitNewDelivery = insertNewDeliveryForm2.getInputByValue("Insert");
 
 		HtmlPage reportPage2 = submitNewDelivery.click();
-		String textReportPage2 = reportPage.asText();
+		String textReportPage2 = reportPage2.asText();
 		// verificar que contem lá o id da morada e o id da venda
 		assertTrue(textReportPage2.contains(addressId));
 		assertTrue(textReportPage2.contains(saleId));
@@ -268,7 +266,7 @@ public class CreateNewSale {
 			anoterReportPage = webClient.getPage(requestSettings);
 			assertEquals(HttpMethod.GET, anoterReportPage.getWebResponse().getWebRequest().getHttpMethod());
 		}
-		
+
 		// obter o id da última venda do cliente antes de uma nova venda
 		// para dps comparar esse id com o id de uma nova venda, e mostrar
 		// que uma nova venda foi feita
@@ -329,5 +327,7 @@ public class CreateNewSale {
 		idNovaSaleDelivery = Integer.parseInt(saleDeliveryTable.getElementsByTagName("tr")
 				.get(saleDeliveryTable.getRowCount() - 1).getElementsByTagName("td").get(0).asText());
 		System.out.println("id da nova sale delivery: " + idNovaSaleDelivery);
+		assertEquals("ids delivery",idNovaSaleDelivery, idLastSaleDelivery+1);	
+
 	}
 }

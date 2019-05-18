@@ -33,8 +33,8 @@ public class InsertNewAddress {
 	private final String LOCALITY = "Almada";
 
 	private static HtmlPage page;
-	private static final String APPLICATION_URL = "http://localhost:8080/VVS_webappdemo/";
-
+	private static final String APPLICATION_URL = "http://localhost:8080/VVS_11_webappdemo/";
+	
 	private int nRows = 0;
 	private int nRowsAfter = 0;
 

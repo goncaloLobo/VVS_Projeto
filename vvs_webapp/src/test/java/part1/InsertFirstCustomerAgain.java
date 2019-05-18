@@ -24,8 +24,8 @@ import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
 public class InsertFirstCustomerAgain {
 
 	private static HtmlPage page;
-	private static final String APPLICATION_URL = "http://localhost:8080/VVS_webappdemo/";
-
+	private static final String APPLICATION_URL = "http://localhost:8080/VVS_11_webappdemo/";
+	
 	private String customers[] = new String[9];
 
 	@BeforeClass
