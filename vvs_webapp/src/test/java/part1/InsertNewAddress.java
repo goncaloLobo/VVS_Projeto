@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.HttpMethod;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -26,17 +28,19 @@ import com.gargoylesoftware.htmlunit.util.NameValuePair;
 
 public class InsertNewAddress {
 
-	private final String NPC = "218802374";
-	private final String ADDRESS = "RUA";
+	private final String NPC = "197672337";
+	private final String ADDRESS = "RUA NUMERO 2";
 	private final String DOOR = "15";
 	private final String POSTALCODE = "2800-081";
 	private final String LOCALITY = "Almada";
 
 	private static HtmlPage page;
 	private static final String APPLICATION_URL = "http://localhost:8080/VVS_11_webappdemo/";
-	
+
 	private int nRows = 0;
 	private int nRowsAfter = 0;
+	
+	private HtmlTable addressTable;
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
@@ -57,8 +61,14 @@ public class InsertNewAddress {
 		}
 	}
 
+	/**
+	 * Obtem numero de linhas iniciais na tabela
+	 * @throws MalformedURLException
+	 * @throws FailingHttpStatusCodeException
+	 * @throws IOException
+	 */
 	@Before
-	public void getNRows() throws IOException {
+	public void getNumberRows() throws MalformedURLException, FailingHttpStatusCodeException, IOException {
 		HtmlPage reportPage;
 
 		try (final WebClient webClient = new WebClient(BrowserVersion.getDefault())) {
@@ -70,15 +80,24 @@ public class InsertNewAddress {
 			System.out.println("NPC: " + NPC);
 			requestSettings.getRequestParameters().add(new NameValuePair("vat", NPC));
 			requestSettings.getRequestParameters().add(new NameValuePair("submit", "Get+Customer"));
-			reportPage = webClient.getPage(requestSettings);
 
+			reportPage = webClient.getPage(requestSettings);
 			assertEquals(HttpMethod.GET, reportPage.getWebResponse().getWebRequest().getHttpMethod());
 		} // try
 
-		final HtmlTable addressTable = (HtmlTable) reportPage.getByXPath("//table[@class='w3-table w3-bordered']")
-				.toArray()[0];
-		List<HtmlTableRow> list = addressTable.getRows();
-		nRows = list.size();
+		try {
+			addressTable = (HtmlTable) reportPage.getByXPath("//table[@class='w3-table w3-bordered']").toArray()[0];
+		} catch (Exception e) {
+			System.out.println("entrei aqui");
+			nRows = 0;
+		}
+		System.out.println("vim para aqui");
+		if (addressTable != null) {
+			List<HtmlTableRow> list = addressTable.getRows();
+			nRows = list.size();
+		}
+		
+		System.out.println("numero de linhas iniciais: " + nRows);
 	}
 
 	@Test

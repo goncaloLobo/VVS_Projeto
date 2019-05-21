@@ -1,16 +1,16 @@
-package vvs_dbsetup;
+package part2;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeFalse;
-import static vvs_dbsetup.DBSetupUtils.DB_PASSWORD;
-import static vvs_dbsetup.DBSetupUtils.DB_URL;
-import static vvs_dbsetup.DBSetupUtils.DB_USERNAME;
-import static vvs_dbsetup.DBSetupUtils.DELETE_ALL;
-import static vvs_dbsetup.DBSetupUtils.INSERT_CUSTOMER_ADDRESS_DATA;
-import static vvs_dbsetup.DBSetupUtils.NUM_INIT_CUSTOMERS;
-import static vvs_dbsetup.DBSetupUtils.NUM_INIT_SALES;
-import static vvs_dbsetup.DBSetupUtils.startApplicationDatabaseForTesting;
+import static part2.DBSetupUtils.DB_PASSWORD;
+import static part2.DBSetupUtils.DB_URL;
+import static part2.DBSetupUtils.DB_USERNAME;
+import static part2.DBSetupUtils.DELETE_ALL;
+import static part2.DBSetupUtils.INSERT_CUSTOMER_ADDRESS_DATA;
+import static part2.DBSetupUtils.NUM_INIT_CUSTOMERS;
+import static part2.DBSetupUtils.NUM_INIT_SALES;
+import static part2.DBSetupUtils.startApplicationDatabaseForTesting;
 
 import java.sql.SQLException;
 
