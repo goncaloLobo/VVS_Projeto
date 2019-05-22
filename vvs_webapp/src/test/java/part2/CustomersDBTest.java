@@ -3,8 +3,6 @@ package part2;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeFalse;
 import static part2.DBSetupUtils.DB_PASSWORD;
 import static part2.DBSetupUtils.DB_URL;
 import static part2.DBSetupUtils.DB_USERNAME;
@@ -30,7 +28,7 @@ import com.ninja_squad.dbsetup.operation.Operation;
 import webapp.services.ApplicationException;
 import webapp.services.CustomerDTO;
 import webapp.services.CustomerService;
-import webapp.services.CustomersDTO;
+import webapp.services.SaleService;
 
 public class CustomersDBTest {
 
@@ -109,6 +107,7 @@ public class CustomersDBTest {
 		assertNotNull(customer);
 		
 		CustomerService.INSTANCE.removeCustomer(npc);
+		SaleService.INSTANCE.removeSale(npc);
 		CustomerService.INSTANCE.addCustomer(customer.vat, customer.designation, customer.phoneNumber);
 		
 		CustomerDTO sameCustomer = CustomerService.INSTANCE.getCustomerByVat(customer.vat);

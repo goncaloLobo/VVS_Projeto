@@ -63,6 +63,17 @@ public enum SaleService {
 			throw new ApplicationException("Can't add customer with vat number " + customerVat + ".", e);
 		}
 	}
+	
+	public void removeSale(int vat) throws ApplicationException {
+		try {
+			List<SaleRowDataGateway> sales = new SaleRowDataGateway().getAllSales(vat);
+			for (SaleRowDataGateway saleRowDataGateway : sales) {
+				saleRowDataGateway.removeSale();
+			}
+		} catch (PersistenceException e) {
+			throw new ApplicationException("Sale from customer with vat number " + vat + " doesn't exist.", e);
+		}
+	}
 
 	public void updateSale(int id) throws ApplicationException {
 		try {
@@ -98,16 +109,6 @@ public enum SaleService {
 			throw new ApplicationException("Can't add address to customer.", e);
 		}
 	}
-
-//	public void removeSaleDelivery(int vat) throws ApplicationException {
-//		try {
-//			List<SaleDeliveryRowDataGateway> listSaleDel = getAllSaleDelivery(vat); 
-//			CustomerRowDataGateway customer = new CustomerFinder().getCustomerByVATNumber(vat);
-//			customer.removeCustomer();
-//		} catch (PersistenceException e) {
-//			throw new ApplicationException("Customer with vat number " + vat + " doesn't exist.", e);
-//		}
-//	}
 
 	/**
 	 * Checks if a VAT number is valid.
