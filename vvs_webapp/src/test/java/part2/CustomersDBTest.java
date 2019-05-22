@@ -1,12 +1,24 @@
 package part2;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeFalse;
+import static part2.DBSetupUtils.DB_PASSWORD;
+import static part2.DBSetupUtils.DB_URL;
+import static part2.DBSetupUtils.DB_USERNAME;
+import static part2.DBSetupUtils.DELETE_ALL;
+import static part2.DBSetupUtils.INSERT_CUSTOMER_ADDRESS_DATA;
+import static part2.DBSetupUtils.NUM_INIT_CUSTOMERS;
+import static part2.DBSetupUtils.startApplicationDatabaseForTesting;
+
 import java.sql.SQLException;
+import java.util.List;
 
-import static org.junit.Assert.*;
-import static org.junit.Assume.*;
-import static part2.DBSetupUtils.*;
-
-import org.junit.*;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import com.ninja_squad.dbsetup.DbSetup;
 import com.ninja_squad.dbsetup.DbSetupTracker;
@@ -15,7 +27,10 @@ import com.ninja_squad.dbsetup.destination.Destination;
 import com.ninja_squad.dbsetup.destination.DriverManagerDestination;
 import com.ninja_squad.dbsetup.operation.Operation;
 
-import webapp.services.*;
+import webapp.services.ApplicationException;
+import webapp.services.CustomerDTO;
+import webapp.services.CustomerService;
+import webapp.services.CustomersDTO;
 
 public class CustomersDBTest {
 
@@ -55,30 +70,49 @@ public class CustomersDBTest {
 		assertEquals(expected, actual);
 	}
 
+	// a)
 	@Test
-	public void addCustomerSizeTest() throws ApplicationException {
+	public void checkCustomerUpdate() throws ApplicationException {
+		int npc = 197672337;
+		int phone = 969149742;
+		CustomerDTO customer = CustomerService.INSTANCE.getCustomerByVat(npc);
+		CustomerService.INSTANCE.updateCustomerPhone(customer.vat, phone);
+		CustomerDTO otherCustomer = CustomerService.INSTANCE.getCustomerByVat(customer.vat);
 
-		CustomerService.INSTANCE.addCustomer(503183504, "FCUL", 217500000);
-		int size = CustomerService.INSTANCE.getAllCustomers().customers.size();
-
-		assertEquals(NUM_INIT_CUSTOMERS + 1, size);
-	}
-
-	private boolean hasClient(int vat) throws ApplicationException {
-		CustomersDTO customersDTO = CustomerService.INSTANCE.getAllCustomers();
-
-		for (CustomerDTO customer : customersDTO.customers)
-			if (customer.vat == vat)
-				return true;
-		return false;
+		assertNotEquals(customer.phoneNumber, otherCustomer.phoneNumber);
+		assertEquals(otherCustomer.phoneNumber, phone);
 	}
 
 	@Test
-	public void addCustomerTest() throws ApplicationException {
+	public void deleteAllButOneCustomer() throws ApplicationException {
+		List<CustomerDTO> listCustomers = CustomerService.INSTANCE.getAllCustomers().customers;
+		int size = listCustomers.size();
+		int vat = listCustomers.get(0).vat;
+		int phone = listCustomers.get(0).phoneNumber;
 
-		assumeFalse(hasClient(503183504));
-		CustomerService.INSTANCE.addCustomer(503183504, "FCUL", 217500000);
-		assertTrue(hasClient(503183504));
+		for (int i = 0; i < size - 1; i++) {
+			CustomerService.INSTANCE.removeCustomer(listCustomers.get(i).vat);
+		}
+		List<CustomerDTO> listCustomersAfter = CustomerService.INSTANCE.getAllCustomers().customers;
+		int sizeAfter = listCustomersAfter.size();
+
+		assertEquals(1, sizeAfter);
+		assertEquals(197672337, vat);
+		assertEquals(914276732, phone);
 	}
-
+	
+	// d)
+	@Test
+	public void addDeletedCustomer() throws ApplicationException {
+		int npc = 197672337;
+		CustomerDTO customer = CustomerService.INSTANCE.getCustomerByVat(npc);
+		assertNotNull(customer);
+		
+		CustomerService.INSTANCE.removeCustomer(npc);
+		CustomerService.INSTANCE.addCustomer(customer.vat, customer.designation, customer.phoneNumber);
+		
+		CustomerDTO sameCustomer = CustomerService.INSTANCE.getCustomerByVat(customer.vat);
+		assertNotNull(sameCustomer);
+		
+	}
 }

@@ -39,7 +39,7 @@ public class InsertNewAddress {
 
 	private int nRows = 0;
 	private int nRowsAfter = 0;
-	
+
 	private HtmlTable addressTable;
 
 	@BeforeClass
@@ -63,6 +63,7 @@ public class InsertNewAddress {
 
 	/**
 	 * Obtem numero de linhas iniciais na tabela
+	 * 
 	 * @throws MalformedURLException
 	 * @throws FailingHttpStatusCodeException
 	 * @throws IOException
@@ -91,13 +92,10 @@ public class InsertNewAddress {
 			System.out.println("entrei aqui");
 			nRows = 0;
 		}
-		System.out.println("vim para aqui");
 		if (addressTable != null) {
 			List<HtmlTableRow> list = addressTable.getRows();
 			nRows = list.size();
 		}
-		
-		System.out.println("numero de linhas iniciais: " + nRows);
 	}
 
 	@Test
