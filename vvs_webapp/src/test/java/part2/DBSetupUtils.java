@@ -38,6 +38,7 @@ public class DBSetupUtils {
 	public static final int NUM_INIT_CUSTOMERS;
 	public static final int NUM_INIT_SALES;
 	public static final int NUM_INIT_ADDRESSES;
+	public static final int NUM_INIT_SALES_DELIVERIES;
 
 	public static final Operation INSERT_CUSTOMER_SALE_DATA;
 	public static final Operation INSERT_CUSTOMER_ADDRESS_DATA;
@@ -55,8 +56,10 @@ public class DBSetupUtils {
 
 		NUM_INIT_SALES = insertSales.getRowCount();
 
-		// it's possible to combine dataset samples with 'sequenceOf'
-		INSERT_CUSTOMER_SALE_DATA = sequenceOf(insertCustomers, insertSales);
+		Insert insertSaleDeliveries = insertInto("SALEDELIVERY").columns("SALE_ID", "CUSTOMER_VAT", "ADDRESS_ID")
+				.values(1, 197672337, 1).build();
+
+		NUM_INIT_SALES_DELIVERIES = insertSaleDeliveries.getRowCount();
 
 		Insert insertAddresses = insertInto("ADDRESS")
 				.withGeneratedValue("ID", ValueGenerators.sequence().startingAt(100L).incrementingBy(1))
@@ -64,9 +67,11 @@ public class DBSetupUtils {
 				.values("R. 25 de Abril, 101A, Porto", 197672337)
 				.values("Av Neil Armstrong, Cratera Azul, Lua", 168027852).build();
 
+		// it's possible to combine dataset samples with 'sequenceOf'
+		INSERT_CUSTOMER_SALE_DATA = sequenceOf(insertCustomers, insertSales, insertSaleDeliveries, insertAddresses);
+
 		NUM_INIT_ADDRESSES = insertAddresses.getRowCount();
 
 		INSERT_CUSTOMER_ADDRESS_DATA = sequenceOf(insertCustomers, insertAddresses);
 	}
-
 }

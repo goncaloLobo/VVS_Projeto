@@ -139,17 +139,17 @@ public class SaleDeliveryRowDataGateway {
 		}
 	}
 
-	private static final String REMOVE_SALE_DELIVERY_BY_VAT = "delete from customer " + "where vatnumber = ?";
+	private static final String REMOVE_SALE_DELIVERY_BY_VAT = "delete from saledelivery " + "where customer_vat = ?";
 
-//	public void removeSaleDelivery() throws RecordNotFoundException {
-//		try (PreparedStatement statement = DataSource.INSTANCE.prepare(REMOVE_SALE_DELIVERY_BY_VAT)){
-//			// set statement arguments
-//			statement.setInt(1, vat);
-//			// execute SQL
-//			statement.executeUpdate();
-//		} catch (SQLException e) {
-//			throw new PersistenceException("Internal error updating customer " + id + ".", e);
-//		}
-//	}
+	public void removeSalesDelivery() throws PersistenceException {
+		try (PreparedStatement statement = DataSource.INSTANCE.prepare(REMOVE_SALE_DELIVERY_BY_VAT)){
+			// set statement arguments
+			statement.setInt(1, customer_vat);
+			// execute SQL
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			throw new PersistenceException("Internal error updating customer " + id + ".", e);
+		}
+	}
 
 }

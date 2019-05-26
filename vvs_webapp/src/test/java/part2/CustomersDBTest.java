@@ -16,7 +16,9 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import com.ninja_squad.dbsetup.DbSetup;
 import com.ninja_squad.dbsetup.DbSetupTracker;
@@ -31,6 +33,9 @@ import webapp.services.CustomerService;
 import webapp.services.SaleService;
 
 public class CustomersDBTest {
+
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
 
 	private static Destination dataSource;
 
@@ -81,6 +86,7 @@ public class CustomersDBTest {
 		assertEquals(otherCustomer.phoneNumber, phone);
 	}
 
+	// b)
 	@Test
 	public void deleteAllButOneCustomer() throws ApplicationException {
 		List<CustomerDTO> listCustomers = CustomerService.INSTANCE.getAllCustomers().customers;
@@ -98,20 +104,20 @@ public class CustomersDBTest {
 		assertEquals(197672337, vat);
 		assertEquals(914276732, phone);
 	}
-	
+
 	// d)
 	@Test
 	public void addDeletedCustomer() throws ApplicationException {
 		int npc = 197672337;
 		CustomerDTO customer = CustomerService.INSTANCE.getCustomerByVat(npc);
 		assertNotNull(customer);
-		
+
 		CustomerService.INSTANCE.removeCustomer(npc);
 		SaleService.INSTANCE.removeSale(npc);
 		CustomerService.INSTANCE.addCustomer(customer.vat, customer.designation, customer.phoneNumber);
-		
+
 		CustomerDTO sameCustomer = CustomerService.INSTANCE.getCustomerByVat(customer.vat);
 		assertNotNull(sameCustomer);
-		
+
 	}
 }

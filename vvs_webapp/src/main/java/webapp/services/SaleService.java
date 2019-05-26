@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import webapp.persistence.CustomerFinder;
-import webapp.persistence.CustomerRowDataGateway;
 import webapp.persistence.PersistenceException;
 import webapp.persistence.SaleDeliveryRowDataGateway;
 import webapp.persistence.SaleRowDataGateway;
@@ -55,15 +53,23 @@ public enum SaleService {
 	}
 
 	public void addSale(int customerVat) throws ApplicationException {
-		try {
-			SaleRowDataGateway sale = new SaleRowDataGateway(customerVat, new Date());
-			sale.insert();
+		if (!isValidVAT(customerVat))
+			throw new ApplicationException("Invalid VAT number: " + customerVat);
+		else
+			try {
+				try {
+					CustomerService.INSTANCE.getCustomerByVat(customerVat);
+				} catch (Exception e) {
+					throw new ApplicationException("Invalid VAT number: " + customerVat);
+				}
+				SaleRowDataGateway sale = new SaleRowDataGateway(customerVat, new Date());
+				sale.insert();
 
-		} catch (PersistenceException e) {
-			throw new ApplicationException("Can't add customer with vat number " + customerVat + ".", e);
-		}
+			} catch (PersistenceException e) {
+				throw new ApplicationException("Can't add customer with vat number " + customerVat + ".", e);
+			}
 	}
-	
+
 	public void removeSale(int vat) throws ApplicationException {
 		try {
 			List<SaleRowDataGateway> sales = new SaleRowDataGateway().getAllSales(vat);
@@ -72,6 +78,17 @@ public enum SaleService {
 			}
 		} catch (PersistenceException e) {
 			throw new ApplicationException("Sale from customer with vat number " + vat + " doesn't exist.", e);
+		}
+	}
+
+	public void removeSalesDelivery(int vat) throws ApplicationException {
+		try {
+			List<SaleDeliveryRowDataGateway> salesDelivery = new SaleDeliveryRowDataGateway().getAllSaleDelivery(vat);
+			for (SaleDeliveryRowDataGateway saleDeliveryRowDataGateway : salesDelivery) {
+				saleDeliveryRowDataGateway.removeSalesDelivery();
+			}
+		} catch (PersistenceException e) {
+			throw new ApplicationException("Sale delivery from customer with vat number " + vat + " doesn't exist.", e);
 		}
 	}
 
@@ -142,6 +159,10 @@ public enum SaleService {
 		if (checkDigitCalc == 10)
 			checkDigitCalc = 0;
 		return checkDigit == checkDigitCalc;
+	}
+
+	private boolean existsVat() {
+		return false;
 	}
 
 }
