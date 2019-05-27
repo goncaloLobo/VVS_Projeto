@@ -160,9 +160,4 @@ public enum SaleService {
 			checkDigitCalc = 0;
 		return checkDigit == checkDigitCalc;
 	}
-
-	private boolean existsVat() {
-		return false;
-	}
-
 }

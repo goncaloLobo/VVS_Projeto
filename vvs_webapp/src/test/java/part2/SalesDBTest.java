@@ -59,6 +59,12 @@ public class SalesDBTest {
 		dbSetupTracker.launchIfNecessary(dbSetup);
 	}
 
+	/**
+	 * Teste que após apagar um cliente existente verifica que as suas sales e as
+	 * deliveries são eliminadas das base de dados
+	 * 
+	 * @throws ApplicationException
+	 */
 	// c)
 	@Test
 	public void deleteCustomerAndDeliveries() throws ApplicationException {
@@ -160,5 +166,4 @@ public class SalesDBTest {
 			assertEquals(e.getMessage(), "Invalid VAT number: " + vat);
 		}
 	}
-
 }

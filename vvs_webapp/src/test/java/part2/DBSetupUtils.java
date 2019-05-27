@@ -38,7 +38,7 @@ public class DBSetupUtils {
 	public static final int NUM_INIT_CUSTOMERS;
 	public static final int NUM_INIT_SALES;
 	public static final int NUM_INIT_ADDRESSES;
-	public static final int NUM_INIT_SALES_DELIVERIES;
+	public static final int NUM_INIT_SALES_DELIVERIES; // numero inicial de sale deliveries
 
 	public static final Operation INSERT_CUSTOMER_SALE_DATA;
 	public static final Operation INSERT_CUSTOMER_ADDRESS_DATA;

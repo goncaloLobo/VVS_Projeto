@@ -8,7 +8,6 @@ import static part2.DBSetupUtils.DB_URL;
 import static part2.DBSetupUtils.DB_USERNAME;
 import static part2.DBSetupUtils.DELETE_ALL;
 import static part2.DBSetupUtils.INSERT_CUSTOMER_ADDRESS_DATA;
-import static part2.DBSetupUtils.NUM_INIT_CUSTOMERS;
 import static part2.DBSetupUtils.startApplicationDatabaseForTesting;
 
 import java.sql.SQLException;
@@ -53,7 +52,6 @@ public class CustomersDBTest {
 	public void setup() throws SQLException {
 
 		Operation initDBOperations = Operations.sequenceOf(DELETE_ALL, INSERT_CUSTOMER_ADDRESS_DATA);
-
 		DbSetup dbSetup = new DbSetup(dataSource, initDBOperations);
 
 		// Use the tracker to launch the DbSetup. This will speed-up tests
@@ -62,22 +60,17 @@ public class CustomersDBTest {
 
 	}
 
-	@Test
-	public void queryCustomerNumberTest() throws ApplicationException {
-		// read-only test: unnecessary to re-launch setup after test has been run
-		dbSetupTracker.skipNextLaunch();
-
-		int expected = NUM_INIT_CUSTOMERS;
-		int actual = CustomerService.INSTANCE.getAllCustomers().customers.size();
-
-		assertEquals(expected, actual);
-	}
-
+	/**
+	 * Teste que verifica que depois de fazer update das informações do customer,
+	 * essas estão bem guardadas
+	 * 
+	 * @throws ApplicationException
+	 */
 	// a)
 	@Test
 	public void checkCustomerUpdate() throws ApplicationException {
-		int npc = 197672337;
-		int phone = 969149742;
+		int npc = 197672337; // npc de um cliente existente
+		int phone = 969149742; // novo phonenumber a atualizar
 		CustomerDTO customer = CustomerService.INSTANCE.getCustomerByVat(npc);
 		CustomerService.INSTANCE.updateCustomerPhone(customer.vat, phone);
 		CustomerDTO otherCustomer = CustomerService.INSTANCE.getCustomerByVat(customer.vat);
@@ -86,6 +79,12 @@ public class CustomersDBTest {
 		assertEquals(otherCustomer.phoneNumber, phone);
 	}
 
+	/**
+	 * Teste que verifica que quando todos os clientes menos um são removidos, então
+	 * passa a existir apenas um cliente
+	 * 
+	 * @throws ApplicationException
+	 */
 	// b)
 	@Test
 	public void deleteAllButOneCustomer() throws ApplicationException {
@@ -105,6 +104,12 @@ public class CustomersDBTest {
 		assertEquals(914276732, phone);
 	}
 
+	/**
+	 * Teste que permite verificar que depois de remover um customer é possível
+	 * inseri-lo de volta sem problemas
+	 * 
+	 * @throws ApplicationException
+	 */
 	// d)
 	@Test
 	public void addDeletedCustomer() throws ApplicationException {
@@ -114,10 +119,10 @@ public class CustomersDBTest {
 
 		CustomerService.INSTANCE.removeCustomer(npc);
 		SaleService.INSTANCE.removeSale(npc);
+		SaleService.INSTANCE.removeSalesDelivery(npc);
 		CustomerService.INSTANCE.addCustomer(customer.vat, customer.designation, customer.phoneNumber);
 
 		CustomerDTO sameCustomer = CustomerService.INSTANCE.getCustomerByVat(customer.vat);
 		assertNotNull(sameCustomer);
-
 	}
 }

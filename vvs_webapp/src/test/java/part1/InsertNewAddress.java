@@ -28,6 +28,7 @@ import com.gargoylesoftware.htmlunit.util.NameValuePair;
 
 public class InsertNewAddress {
 
+	// dados da nova morada
 	private final String NPC = "197672337";
 	private final String ADDRESS = "RUA NUMERO 2";
 	private final String DOOR = "15";
@@ -87,17 +88,24 @@ public class InsertNewAddress {
 		} // try
 
 		try {
+			// obtem a tabela de addresses
 			addressTable = (HtmlTable) reportPage.getByXPath("//table[@class='w3-table w3-bordered']").toArray()[0];
 		} catch (Exception e) {
-			System.out.println("entrei aqui");
+			// se não for possível é porque a tabela não tem nenhuma linha
 			nRows = 0;
 		}
 		if (addressTable != null) {
+			// se for possível vai obter o número de linhas
 			List<HtmlTableRow> list = addressTable.getRows();
 			nRows = list.size();
 		}
 	}
 
+	/**
+	 * Teste que insere uma nova morada para um customer existente
+	 * 
+	 * @throws IOException
+	 */
 	@Test
 	public void insertNewAddressTest() throws IOException {
 		// get a specific link
@@ -155,15 +163,18 @@ public class InsertNewAddress {
 			assertEquals(HttpMethod.GET, reportPageAux.getWebResponse().getWebRequest().getHttpMethod());
 		}
 
+		// verificar que os dados foram inseridos
 		assertTrue(reportPageAux.asXml().contains(ADDRESS));
 		assertTrue(reportPageAux.asXml().contains(DOOR));
 		assertTrue(reportPageAux.asXml().contains(POSTALCODE));
 		assertTrue(reportPageAux.asXml().contains(LOCALITY));
 
+		// obter a tabela de addresses
 		final HtmlTable addressTable = (HtmlTable) reportPageAux.getByXPath("//table[@class='w3-table w3-bordered']")
 				.toArray()[0];
 		List<HtmlTableRow> list = addressTable.getRows();
 		nRowsAfter = list.size();
+		// verificar que o numero de linhas anterior é -1 que o número de linhas atual
 		assertEquals("numero de linhas", nRows - 1, nRowsAfter - 2);
 	}
 }

@@ -199,7 +199,7 @@ public class SaleRowDataGateway {
 	}
 
 	/**
-	 * The update customerPhone SQL statement
+	 * The remove customer SQL statement
 	 */
 	private static final String REMOVE_SALE_SQL = "delete from sale " + "where customer_vat = ?";
 
@@ -232,5 +232,4 @@ public class SaleRowDataGateway {
 			throw new PersistenceException("Internal error updating customer " + id + ".", e);
 		}
 	}
-
 }

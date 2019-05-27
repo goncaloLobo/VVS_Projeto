@@ -26,15 +26,15 @@ import com.gargoylesoftware.htmlunit.util.NameValuePair;
 
 public class CreateNewSale {
 
-	private String npc = "218802374";
-	private int idNovaSale;
-	private int idLastSale;
-	private int idNovaSaleDelivery;
-	private int idLastSaleDelivery;
+	private String npc = "197672337";
+	private int idNovaSale; // id da nova sale a ser introduzida
+	private int idLastSale; // id da última sale
+	private int idNovaSaleDelivery; // id da nova sale delivery a ser introduzida
+	private int idLastSaleDelivery; // id da última sale delivery
 
 	private static HtmlPage page;
 	private static final String APPLICATION_URL = "http://localhost:8080/VVS_11_webappdemo/";
-	
+
 	@BeforeClass
 	public static void setUpClass() throws Exception {
 		try (final WebClient webClient = new WebClient(BrowserVersion.getDefault())) {
@@ -117,11 +117,17 @@ public class CreateNewSale {
 		String textReportPage = reportPage.asText();
 		assertTrue(textReportPage.contains(npc));
 
-		System.out.println("criei nova sale, vou verificar se a sale criada existe.");
 		// verifica se a sale criada existe
 		checkNewSaleId();
 	}
 
+	/**
+	 * Verifica que a nova sale foi criada, ou seja, que o id da nova sale é
+	 * diferente do id da sale anterior
+	 * 
+	 * @throws FailingHttpStatusCodeException
+	 * @throws IOException
+	 */
 	public void checkNewSaleId() throws FailingHttpStatusCodeException, IOException {
 		HtmlPage reportPageAux;
 		String status = null;
@@ -140,6 +146,7 @@ public class CreateNewSale {
 		// verificar que o npc está na tabela
 		assertTrue(reportPageAux.asXml().contains(npc));
 
+		// obtem a tabela das sales
 		final HtmlTable salesTable = (HtmlTable) reportPageAux.getByXPath("//table[@class='w3-table w3-bordered']")
 				.toArray()[0];
 
@@ -148,21 +155,20 @@ public class CreateNewSale {
 		status = salesTable.getElementsByTagName("tr").get(salesTable.getRowCount() - 1).getElementsByTagName("td")
 				.get(3).asText();
 
-		System.out.println("id da nova sale criada: " + idNovaSale);
-		System.out.println("estado da nova sale criada: " + status);
-
 		// verifica que a sale está aberta
 		assertEquals("O", status);
 		// verifica que o id da nova venda não é o id
 		assertNotEquals(idLastSale, idNovaSale);
 	}
 
+	/**
+	 * Teste que cria uma nova sale delivery
+	 * @throws IOException
+	 */
 	@Test
 	public void createNewSaleDelivery() throws IOException {
-		System.out.println("vou criar uma nova sale delivery então!");
 		// obter o id da ultima sale delivery, para dps verificar que a nova
 		// sale delivery é +1 da anterior
-		System.out.println("mas antes vou obter o id da ultima sale delivery.");
 		getLastSaleDeliveryId();
 
 		// get a specific link
@@ -224,11 +230,15 @@ public class CreateNewSale {
 		assertTrue(textReportPage2.contains(addressId));
 		assertTrue(textReportPage2.contains(saleId));
 
-		System.out.println("criei uma nova sale delivery, vou verificar que existe.");
 		// verifica se a delivery criada existe
 		checkNewDeliveryId();
 	}
 
+	/**
+	 * Obtem o id da ultima sale delivery
+	 * @throws FailingHttpStatusCodeException
+	 * @throws IOException
+	 */
 	public void getLastSaleDeliveryId() throws FailingHttpStatusCodeException, IOException {
 		// get a specific link
 		HtmlAnchor showDeliveryForm = page.getAnchorByHref("showDelivery.html");
@@ -274,7 +284,6 @@ public class CreateNewSale {
 				.toArray()[0];
 		idLastSaleDelivery = Integer.parseInt(salesTable.getElementsByTagName("tr").get(salesTable.getRowCount() - 1)
 				.getElementsByTagName("td").get(0).asText());
-		System.out.println("id da ultima sale delivery: " + idLastSaleDelivery);
 	}
 
 	/**
@@ -322,12 +331,11 @@ public class CreateNewSale {
 			assertEquals(HttpMethod.GET, reportPageAux.getWebResponse().getWebRequest().getHttpMethod());
 		}
 
+		// obtem a tabela das sale deliveries
 		final HtmlTable saleDeliveryTable = (HtmlTable) reportPageAux
 				.getByXPath("//table[@class='w3-table w3-bordered']").toArray()[0];
 		idNovaSaleDelivery = Integer.parseInt(saleDeliveryTable.getElementsByTagName("tr")
 				.get(saleDeliveryTable.getRowCount() - 1).getElementsByTagName("td").get(0).asText());
-		System.out.println("id da nova sale delivery: " + idNovaSaleDelivery);
-		assertEquals("ids delivery",idNovaSaleDelivery, idLastSaleDelivery+1);	
-
+		assertEquals("ids delivery", idNovaSaleDelivery, idLastSaleDelivery + 1);
 	}
 }

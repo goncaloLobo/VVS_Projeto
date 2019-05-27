@@ -27,6 +27,7 @@ public class CreateAndRemoveCustomer {
 	private static HtmlPage page;
 	private static final String APPLICATION_URL = "http://localhost:8080/VVS_11_webappdemo/";
 
+	// array para os customers existentes, os seus npcs, designations e phonenumbers
 	private String customers[] = { "197672337", "JOSE FARIA", "914276732", "168027852", "LUIS SANTOS", "964294317",
 			"218802374", "Gonçalo", "969149742" };
 
@@ -49,10 +50,14 @@ public class CreateAndRemoveCustomer {
 		}
 	}
 
+	/**
+	 * Teste que insere e remove novo customer
+	 * @throws IOException
+	 */
 	@Test
 	public void insertNewCustomer() throws IOException {
 		String npc = "123456789";
-		String designation = "Duarte";
+		String designation = "DUARTE";
 		String phoneNumber = "967775147";
 
 		// get a specific link
@@ -130,6 +135,5 @@ public class CreateAndRemoveCustomer {
 				i += 3;
 			}
 		}
-
 	}
 }

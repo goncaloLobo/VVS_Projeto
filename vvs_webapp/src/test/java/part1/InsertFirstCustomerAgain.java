@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
@@ -11,8 +12,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.HttpMethod;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.WebRequest;
+import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
@@ -20,12 +24,14 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlTable;
 import com.gargoylesoftware.htmlunit.html.HtmlTableCell;
 import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
+import com.gargoylesoftware.htmlunit.util.NameValuePair;
 
 public class InsertFirstCustomerAgain {
 
 	private static HtmlPage page;
 	private static final String APPLICATION_URL = "http://localhost:8080/VVS_11_webappdemo/";
-	
+
+	// array para os customers existentes, os seus npcs, designations e phonenumbers
 	private String customers[] = new String[9];
 
 	@BeforeClass
@@ -49,6 +55,7 @@ public class InsertFirstCustomerAgain {
 
 	/**
 	 * Obtem o primeiro cliente
+	 * 
 	 * @throws MalformedURLException
 	 */
 	@Before
@@ -58,6 +65,7 @@ public class InsertFirstCustomerAgain {
 		HtmlAnchor removeCustomerLink = page.getAnchorByHref("GetAllCustomersPageController");
 		HtmlPage nextPage = (HtmlPage) removeCustomerLink.openLinkInNewWindow();
 
+		// obter a tabela com os customers
 		final HtmlTable customersTable = (HtmlTable) nextPage.getByXPath("//table[@class='w3-table w3-bordered']")
 				.toArray()[0];
 
@@ -67,7 +75,7 @@ public class InsertFirstCustomerAgain {
 			if (customerInfo.get(0).asText().contains("Name"))
 				continue; // skip header
 			else if (j < customers.length) {
-				customers[i + 1] = customerInfo.get(0).asText(); // Nome
+				customers[i + 1] = customerInfo.get(0).asText(); // Designation
 				customers[i] = customerInfo.get(2).asText(); // VAT
 				customers[i + 2] = customerInfo.get(1).asText(); // Phone
 				j += 3;
@@ -75,11 +83,16 @@ public class InsertFirstCustomerAgain {
 		}
 	}
 
+	/**
+	 * Teste que re-insere o primeiro customer
+	 * @throws IOException
+	 */
 	@Test
 	public void insertCustomerAgain() throws IOException {
 		String npc = customers[0];
 		String designation = customers[1];
 		String phoneNumber = customers[2];
+		String erro = null;
 
 		// get a specific link
 		HtmlAnchor insertNewCustomerLink = page.getAnchorByHref("addCustomer.html");
@@ -108,10 +121,28 @@ public class InsertFirstCustomerAgain {
 
 		// check if report page includes the proper values
 		HtmlPage reportPage = submit.click();
-		String textReportPage = reportPage.asText();
 
-		// LIDAR COM A FALHA???
-		
-		
+		HtmlPage reportTextPage = null;
+
+		try (final WebClient webClient = new WebClient(BrowserVersion.getDefault())) {
+			java.net.URL url = new java.net.URL(APPLICATION_URL + "AddCustomerPageController");
+			WebRequest requestSettings = new WebRequest(url, HttpMethod.POST);
+
+			requestSettings.setRequestParameters(new ArrayList<NameValuePair>());
+			requestSettings.getRequestParameters().add(new NameValuePair("vat", npc));
+			requestSettings.getRequestParameters().add(new NameValuePair("designation", designation));
+			requestSettings.getRequestParameters().add(new NameValuePair("phone", phoneNumber));
+			reportTextPage = webClient.getPage(requestSettings);
+		}
+
+		// ir buscar o erro dentro da tag li
+		List<DomElement> liElements = reportTextPage.getElementsByTagName("li");
+		for (DomElement domElement : liElements) {
+			erro = domElement.asText();
+		}
+
+		// verificar que o erro é igual ao esperado
+		assertEquals("It was not possible to fulfill the request: Can't add customer with vat number " + npc + ".",
+				erro);
 	}
 }
